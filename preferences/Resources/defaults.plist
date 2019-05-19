@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>enabled</key>
+	<true/>
+
+	<key>toggleAirDrop</key>
+	<string>#007AFF:1.00</string>
+	<key>toggleAirplaneMode</key>
+	<string>#FF9500:1.00</string>
+	<key>toggleBluetooth</key>
+	<string>#007AFF:1.00</string>
+	<key>toggleCellularData</key>
+	<string>#4CD964:1.00</string>
+	<key>toggleHotspot</key>
+	<string>#4CD964:1.00</string>
+	<key>toggleWiFi</key>
+	<string>#007AFF:1.00</string>
+
+	<key>CCUIOrientationLockModule</key>
+	<string>#FF5A63:1.00</string>
+	<key>DNDUIControlCenterModule</key>
+	<string>#5E67D6:1.00</string>
+	<key>CCUICarModeModule</key>
+	<string>#5E67D6:1.00</string>
+	<key>CCUILowPowerModule</key>
+	<string>#FFCC00:1.00</string>
+	<key>RPControlCenterModuleViewController</key>
+	<string>#FF0000:1.00</string>
+	<key>CCUIFlashlightModuleViewController</key>
+	<string>#007AFF:1.00</string>
+	<key>MPAVAirPlayMirroringMenuModuleViewController</key>
+	<string>#007AFF:1.00</string>
+	<key>LocationModule</key>
+	<string>#003EFF:1.00</string>
+	<key>MTCCTimerViewController</key>
+	<string>#FF9500:1.00</string>
+	<key>CCUIMuteModule</key>
+	<string>#FF0000:1.00</string>
+	<key>CCVPNModule</key>
+	<string>#003EFF:1.00</string>
+	<key>WatusiDeliveryReceipts</key>
+	<string>#007AFF:1.00</string>
+	<key>WatusiLastSeen</key>
+	<string>#007AFF:1.00</string>
+	<key>WatusiReadReceipts</key>
+	<string>#007AFF:1.00</string>
+	<key>AutoLock</key>
+	<string>#36ACCC:1.00</string>
+	<key>CCVibrationModule</key>
+	<string>#FF0000:1.00</string>
+	<key>XBReduceWhiteModule</key>
+	<string>#78A3D4:1.00</string>
+	<key>CTXTestModule</key>
+	<string>#5E67D6:1.00</string>
+
+	<key>sliderBrightness</key>
+	<string>#000000:0.00</string>
+	<key>sliderVolume</key>
+	<string>#000000:0.00</string>
+</dict>
+</plist>
