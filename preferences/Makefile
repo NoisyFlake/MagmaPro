@@ -1,7 +1,7 @@
 include $(THEOS)/makefiles/common.mk
 
-BUNDLE_NAME = MagmaPrefs
-$(BUNDLE_NAME)_FILES = ../include/UIColor.m MagmaPrefs.m MagmaColorPickerCell.m
+BUNDLE_NAME = MagmaProPrefs
+$(BUNDLE_NAME)_FILES = ../include/UIColor.m MagmaPrefs.m MagmaColorPickerCell.m EnabledToggles.m
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS = CoreGraphics UIKit
 $(BUNDLE_NAME)_PRIVATE_FRAMEWORKS = Preferences

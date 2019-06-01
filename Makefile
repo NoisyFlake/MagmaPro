@@ -1,9 +1,9 @@
-ARCHS = arm64
-FINALPACKAGE = 1
+ARCHS = arm64 arm64e
+FINALPACKAGE = 0
 
 include $(THEOS)/makefiles/common.mk
 
-TWEAK_NAME = Magma
+TWEAK_NAME = MagmaPro
 $(TWEAK_NAME)_FILES = include/UIColor.m Magma.xm
 $(TWEAK_NAME)_CFLAGS += -fobjc-arc
 $(TWEAK_NAME)_LIBRARIES = colorpicker

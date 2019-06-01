@@ -48,7 +48,7 @@
 	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning!" message:@"Do you want to reset all settings to their default values?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSFileManager *manager = [NSFileManager defaultManager];
-        [manager removeItemAtPath:@"/User/Library/Preferences/com.noisyflake.magma.plist" error:nil];
+        [manager removeItemAtPath:@"/User/Library/Preferences/com.noisyflake.magmapro.plist" error:nil];
 
         [self respring];
     }];
@@ -84,7 +84,7 @@
 		tweakName.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		tweakName.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
 		tweakName.textColor = [UIColor whiteColor];
-		tweakName.text = @"Magma";
+		tweakName.text = @"Magma Pro";
 		tweakName.textAlignment = NSTextAlignmentCenter;
 
 		CGRect versionFrame = CGRectMake(0, -5, width, height);
@@ -93,7 +93,7 @@
 		version.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		version.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0f];
 		version.textColor = [UIColor whiteColor];
-		version.text = @"Version 1.0.2";
+		version.text = @"Version 1.0.0";
 		version.backgroundColor = [UIColor clearColor];
 		version.textAlignment = NSTextAlignmentCenter;
 

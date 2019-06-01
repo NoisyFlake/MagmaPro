@@ -74,11 +74,11 @@
 }
 
 -(NSString *)previewColor {
-    NSMutableDictionary *_prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magma.plist"];
+    NSMutableDictionary *_prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmapro.plist"];
     NSString *color = [_prefs valueForKey:[self.specifier propertyForKey:@"key"]];
 
     if (color == nil) {
-        NSMutableDictionary *_defaultPrefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/MagmaPrefs.bundle/defaults.plist"];
+        NSMutableDictionary *_defaultPrefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/MagmaProPrefs.bundle/defaults.plist"];
         color = [_defaultPrefs valueForKey:[self.specifier propertyForKey:@"key"]];
     }
 

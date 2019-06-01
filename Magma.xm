@@ -64,18 +64,38 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 	NSString *toggleColor = getValue(description);
 
-	// Fix for the Mute module because it uses the same shape for both states
+	// Fix for modules that use the same shape for both states
 	if ([description isEqual:@"CCUIMuteModule"] && [self.glyphState isEqual:@"ringer"]) {
 		toggleColor = @"#FFFFFF:1.00";
 	}
 
 	if (toggleColor == nil) return;
 
-	colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:toggleColor] CGColor]);
+	UIColor *glyphColor = [UIColor RGBAColorFromHexString:toggleColor];
+	UIColor *backgroundColor = [UIColor clearColor];
+	double bgBrightness = 0.52;
+	UIColor *bgColorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
+
+	if (getBool(@"invertToggles")) {
+		backgroundColor = glyphColor;
+		glyphColor = [UIColor whiteColor];
+		bgBrightness = 0;
+		bgColorAddColor = [UIColor clearColor];
+	}
+
+	colorLayers(self.layer.sublayers, [glyphColor CGColor]);
+
+	for (_MTBackdropView* backdropView in self.allSubviews) {
+		if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
+			backdropView.backgroundColor = backgroundColor;
+			backdropView.brightness = bgBrightness;
+			backdropView.colorAddColor = bgColorAddColor;
+		}
+	}
 
 	for (UIView* subview in controller.view.allSubviews) {
 		if ([subview isMemberOfClass:%c(UILabel)]) {
-			colorLabel((UILabel *)subview, [UIColor RGBAColorFromHexString:toggleColor]);
+			colorLabel((UILabel *)subview, glyphColor);
 		}
 	}
 
@@ -86,39 +106,29 @@ NSMutableDictionary *prefs, *defaultPrefs;
 -(void)didMoveToWindow {
 	%orig;
 
-	// On iOS 12 we could just hook an iVar to get the backdropView, on iOS 11 this is the only way
-	for (UIView *subview in self.subviews) {
-		if (![subview isMemberOfClass:%c(UIView)]) continue;
-		for (_MTBackdropView *backdropView in subview.allSubviews) {
-			if (![backdropView isMemberOfClass:%c(_MTBackdropView)]) continue;
+	MTMaterialView *matView = MSHookIvar<MTMaterialView *>(self, "_continuousValueBackgroundView");
+	_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
 
-			HBLogDebug(@"I GOT CALLED");
+	UIViewController *controller = [self _viewControllerForAncestor];
+	NSString *sliderColor = nil;
 
-			// _MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
+	if ([[controller description] containsString:@"Display"]) {
+		sliderColor = getValue(@"sliderBrightness");
+	} else if ([[controller description] containsString:@"Audio"]) {
+		sliderColor = getValue(@"sliderVolume");
+	}
 
-			UIViewController *controller = [self _viewControllerForAncestor];
-			NSString *sliderColor = nil;
+	if (sliderColor == nil) return;
 
-			if ([[controller description] containsString:@"Display"]) {
-				sliderColor = getValue(@"sliderBrightness");
-			} else if ([[controller description] containsString:@"Audio"]) {
-				sliderColor = getValue(@"sliderVolume");
-			}
+	backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
+	colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
 
-			if (sliderColor == nil) return;
-
-			backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
-			colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
-
-			if (![sliderColor containsString:@":0.00"]) {
-				backdropView.brightness = 0;
-				backdropView.colorAddColor = [UIColor clearColor];
-			} else {
-				backdropView.brightness = 0.52;
-				backdropView.colorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
-			}
-
-		}
+	if (![sliderColor containsString:@":0.00"]) {
+		backdropView.brightness = 0;
+		backdropView.colorAddColor = [UIColor clearColor];
+	} else {
+		backdropView.brightness = 0.52;
+		backdropView.colorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
 	}
 
 }
@@ -191,13 +201,13 @@ static NSString* getValue(NSString *key) {
 }
 
 static void loadPrefs() {
-	prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magma.plist"];
+	prefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.noisyflake.magmapro.plist"];
 }
 
 static void initPrefs() {
 	// Copy the default preferences file when the actual preference file doesn't exist
-	NSString *path = @"/User/Library/Preferences/com.noisyflake.magma.plist";
-	NSString *pathDefault = @"/Library/PreferenceBundles/MagmaPrefs.bundle/defaults.plist";
+	NSString *path = @"/User/Library/Preferences/com.noisyflake.magmapro.plist";
+	NSString *pathDefault = @"/Library/PreferenceBundles/MagmaProPrefs.bundle/defaults.plist";
 	NSFileManager *fileManager = [NSFileManager defaultManager];
 	if (![fileManager fileExistsAtPath:path]) {
 		[fileManager copyItemAtPath:pathDefault toPath:path error:nil];
@@ -207,7 +217,7 @@ static void initPrefs() {
 }
 
 %ctor {
-	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.noisyflake.magma/prefsupdated"), NULL, CFNotificationSuspensionBehaviorCoalesce);
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)loadPrefs, CFSTR("com.noisyflake.magmapro/prefsupdated"), NULL, CFNotificationSuspensionBehaviorCoalesce);
 	initPrefs();
 	loadPrefs();
 

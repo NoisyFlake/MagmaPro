@@ -5,7 +5,7 @@
 	<key>entry</key>
 	<dict>
 		<key>bundle</key>
-		<string>MagmaPrefs</string>
+		<string>MagmaProPrefs</string>
 		<key>cell</key>
 		<string>PSLinkCell</string>
 		<key>detail</key>
@@ -13,7 +13,7 @@
 		<key>isController</key>
 		<true/>
 		<key>label</key>
-		<string>Magma</string>
+		<string>Magma Pro</string>
 		<key>icon</key>
 		<string>icon.png</string>
 	</dict>
