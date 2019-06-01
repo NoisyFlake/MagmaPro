@@ -39,6 +39,26 @@
 @property (nonatomic,copy) UIColor * colorAddColor;
 @end
 
+@interface MPButton : UIButton
+@end
+
+@interface MediaControlsTransportButton : MPButton
+@end
+
+@interface MediaControlsTransportStackView : UIView
+@property (nonatomic,retain) MediaControlsTransportButton * leftButton;
+@property (nonatomic,retain) MediaControlsTransportButton * middleButton;
+@property (nonatomic,retain) MediaControlsTransportButton * rightButton;
+@end
+
+@interface MediaControlsContainerView : UIView
+@property (nonatomic,retain) MediaControlsTransportStackView * mediaControlsTransportStackView;
+@end
+
+@interface MediaControlsHeaderView : UIView
+@property (nonatomic,retain) UILabel * primaryLabel;
+@property (nonatomic,retain) UILabel * secondaryLabel;
+@end
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
 static void colorLabel(UILabel *label, UIColor *color);

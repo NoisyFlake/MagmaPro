@@ -62,5 +62,16 @@
 	<string>#000000:0.00</string>
 	<key>sliderVolume</key>
 	<string>#000000:0.00</string>
+
+	<key>mediaControlsLeftButton</key>
+	<string>#FFFFFF:1.00</string>
+	<key>mediaControlsMiddleButton</key>
+	<string>#FFFFFF:1.00</string>
+	<key>mediaControlsRightButton</key>
+	<string>#FFFFFF:1.00</string>
+	<key>mediaControlsPrimaryLabel</key>
+	<string>#FFFFFF:1.00</string>
+	<key>mediaControlsSecondaryLabel</key>
+	<string>#FFFFFF:1.00</string>
 </dict>
 </plist>

@@ -102,6 +102,33 @@ NSMutableDictionary *prefs, *defaultPrefs;
 }
 %end
 
+%hook MediaControlsTransportStackView
+-(void)layoutSubviews {
+	%orig;
+
+	MediaControlsTransportButton *leftButton = self.leftButton;
+	leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
+
+	MediaControlsTransportButton *middleButton = self.middleButton;
+	middleButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsMiddleButton")] CGColor];
+
+	MediaControlsTransportButton *rightButton = self.rightButton;
+	rightButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsRightButton")] CGColor];
+}
+%end
+
+%hook MediaControlsHeaderView
+-(void)layoutSubviews {
+	%orig;
+
+	UILabel *primaryLabel = self.primaryLabel;
+	primaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsPrimaryLabel")];
+
+	UILabel *secondaryLabel = self.secondaryLabel;
+	secondaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsSecondaryLabel")];
+}
+%end
+
 %hook CCUIModuleSliderView
 -(void)didMoveToWindow {
 	%orig;
