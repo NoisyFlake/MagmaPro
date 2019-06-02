@@ -19,6 +19,17 @@
 -(CCUIToggleModule *)module;
 @end
 
+@interface CCUIMenuModuleViewController : CCUIButtonModuleViewController
+@end
+
+@interface CCUIAppLauncherModule : NSObject
+@property (nonatomic,copy) NSString * applicationIdentifier;
+@end
+
+@interface CCUIAppLauncherViewController : CCUIMenuModuleViewController
+@property (assign,nonatomic) CCUIAppLauncherModule * module;
+@end
+
 @interface UIView (Magma)
 @property (copy,readonly) NSArray * allSubviews;
 @end
@@ -62,4 +73,4 @@
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
 static void colorLabel(UILabel *label, UIColor *color);
-static void colorLayers(NSArray *layers, CGColorRef color);
+static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite);

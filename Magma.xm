@@ -32,6 +32,15 @@ NSMutableDictionary *prefs, *defaultPrefs;
 %end
 
 %hook CCUIButtonModuleView
+-(void)didMoveToWindow {
+	%orig;
+
+	// App Shortcuts need to be only colored once and have no state
+	UIViewController *controller = [self _viewControllerForAncestor];
+	if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
+		[self colorButton];
+	}
+}
 -(void)setGlyphState:(NSString *)arg1 {
 	%orig;
 	[self colorButton];
@@ -52,19 +61,30 @@ NSMutableDictionary *prefs, *defaultPrefs;
 -(void)colorButton {
 	UIViewController *controller = [self _viewControllerForAncestor];
 
+	bool isAppShortcut = NO;
+
 	NSString *description = [controller description];
 	if ([controller isMemberOfClass:%c(CCUIToggleViewController)]) {
 		CCUIToggleModule *module = ((CCUIToggleViewController *)controller).module;
 		description = [module description];
+	} else if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
+		CCUIAppLauncherModule *module = ((CCUIAppLauncherViewController *)controller).module;
+		description = module.applicationIdentifier;
+		isAppShortcut = YES;
 	}
 
-	NSUInteger location = [description rangeOfString:@":"].location;
-	if(location == NSNotFound) return;
-	description = [description substringWithRange:NSMakeRange(1, location - 1)];
+	if (!isAppShortcut) {
+		// Get actual module name from description
+		NSUInteger location = [description rangeOfString:@":"].location;
+		if(location == NSNotFound) return;
+		description = [description substringWithRange:NSMakeRange(1, location - 1)];
+	}
+
+	HBLogDebug(@"Found description: %@", description);
 
 	NSString *toggleColor = getValue(description);
 
-	// Fix for modules that use the same shape for both states
+	// Fix for the mute module which uses the same shape for both states
 	if ([description isEqual:@"CCUIMuteModule"] && [self.glyphState isEqual:@"ringer"]) {
 		toggleColor = @"#FFFFFF:1.00";
 	}
@@ -73,17 +93,17 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 	UIColor *glyphColor = [UIColor RGBAColorFromHexString:toggleColor];
 	UIColor *backgroundColor = [UIColor clearColor];
-	double bgBrightness = 0.52;
 	UIColor *bgColorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
+	double bgBrightness = 0.52;
 
-	if (getBool(@"invertToggles")) {
+	if (!isAppShortcut && getBool(@"invertToggles")) {
 		backgroundColor = glyphColor;
 		glyphColor = [UIColor whiteColor];
 		bgBrightness = 0;
 		bgColorAddColor = [UIColor clearColor];
 	}
 
-	colorLayers(self.layer.sublayers, [glyphColor CGColor]);
+	colorLayers(self.layer.sublayers, [glyphColor CGColor], isAppShortcut);
 
 	for (_MTBackdropView* backdropView in self.allSubviews) {
 		if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
@@ -148,7 +168,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	if (sliderColor == nil) return;
 
 	backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
-	colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
+	colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor], NO);
 
 	if (![sliderColor containsString:@":0.00"]) {
 		backdropView.brightness = 0;
@@ -161,11 +181,8 @@ NSMutableDictionary *prefs, *defaultPrefs;
 }
 %end
 
-static BOOL isNotAColor(CGColorRef cgColor) {
+static BOOL isNotAColor(CGColorRef cgColor, BOOL colorWhite) {
 	if (cgColor == nil) return YES;
-
-	// Monochrome color
-	if (CGColorGetNumberOfComponents(cgColor) <= 3) return YES;
 
 	// There is probably a better way to do this, but it works for now
 	const CGFloat *components = CGColorGetComponents(cgColor);
@@ -173,41 +190,43 @@ static BOOL isNotAColor(CGColorRef cgColor) {
 	NSString *white = [NSString stringWithFormat:@"%f,%f,%f", 1.0, 1.0, 1.0];
 	NSString *black = [NSString stringWithFormat:@"%f,%f,%f", 0.0, 0.0, 0.0];
 
-	return ([color isEqual:black] || [color isEqual:white] || components[3] == 0);
+	if (!colorWhite && (CGColorGetNumberOfComponents(cgColor) <= 3 || [color isEqual:white])) return YES;
+
+	return ([color isEqual:black] || components[3] == 0);
 }
 
 static void colorLabel(UILabel *label, UIColor *color) {
 	UIColor *labelColor = label.textColor;
-	if (!isNotAColor([labelColor CGColor])) {
+	if (!isNotAColor([labelColor CGColor], NO)) {
 		label.textColor = color;
 	}
 }
 
-static void colorLayers(NSArray *layers, CGColorRef color) {
+static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite) {
 	for (CALayer *sublayer in layers) {
 		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
 			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
-			if (!isNotAColor(fillColor)) {
+			if (!isNotAColor(fillColor, colorWhite)) {
 				((CAShapeLayer *)sublayer).fillColor = color;
 			}
 		} else {
 			CGColorRef backgroundColor = sublayer.backgroundColor;
-			if (!isNotAColor(backgroundColor)) {
+			if (!isNotAColor(backgroundColor, colorWhite)) {
 				sublayer.backgroundColor = color;
 			}
 
 			CGColorRef borderColor = sublayer.borderColor;
-			if (!isNotAColor(borderColor)) {
+			if (!isNotAColor(borderColor, colorWhite)) {
 				sublayer.borderColor = color;
 			}
 
 			CGColorRef contentColor = sublayer.contentsMultiplyColor;
-			if (!isNotAColor(contentColor)) {
+			if (!isNotAColor(contentColor, colorWhite)) {
 				sublayer.contentsMultiplyColor = color;
 			}
 		}
 
-		colorLayers(sublayer.sublayers, color);
+		colorLayers(sublayer.sublayers, color, colorWhite);
 	}
 }
 
