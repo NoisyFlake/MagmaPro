@@ -74,7 +74,7 @@
 		CGRect backgroundFrame = CGRectMake(-50, -35, width+50, height);
 		background = [[UILabel alloc] initWithFrame:backgroundFrame];
 		[background layoutIfNeeded];
-		background.backgroundColor = [UIColor colorWithRed:1.00 green:0.23 blue:0.19 alpha:1.0];
+		background.backgroundColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.12 alpha:1.0];
 		background.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 
 		CGRect tweakNameFrame = CGRectMake(0, -40, width, height);
@@ -83,7 +83,7 @@
 		tweakName.numberOfLines = 1;
 		tweakName.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		tweakName.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:40.0f];
-		tweakName.textColor = [UIColor whiteColor];
+		tweakName.textColor = [UIColor colorWithRed:1.00 green:0.23 blue:0.19 alpha:1.0];
 		tweakName.text = @"Magma Pro";
 		tweakName.textAlignment = NSTextAlignmentCenter;
 
@@ -92,8 +92,8 @@
 		version.numberOfLines = 1;
 		version.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		version.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0f];
-		version.textColor = [UIColor whiteColor];
-		version.text = @"Version 1.0.0";
+		version.textColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.84 alpha:1.0];
+		version.text = @"Version 1.0";
 		version.backgroundColor = [UIColor clearColor];
 		version.textAlignment = NSTextAlignmentCenter;
 

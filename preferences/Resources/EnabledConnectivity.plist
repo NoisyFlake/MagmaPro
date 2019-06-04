@@ -5,10 +5,6 @@
     <key>items</key>
     <array>
         <dict>
-            <key>cell</key>                     <string>PSGroupCell</string>
-            <key>footerText</key>               <string>Changing this option requires a respring</string>
-        </dict>
-        <dict>
             <key>cell</key>                     <string>PSSwitchCell</string>
             <key>default</key>                  <true/>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
@@ -74,6 +70,11 @@
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>WiFi</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSGroupCell</string>
+            <key>footerText</key>               <string>Changing these options requires a respring</string>
+            <key>footerAlignment</key>          <string>1</string>
         </dict>
     </array>
 
