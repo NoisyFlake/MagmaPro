@@ -14,6 +14,11 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	[self colorButton];
 }
 
+-(void)layoutSubviews {
+	%orig;
+	[self colorButton];
+}
+
 %new
 -(void)colorButton {
 	UIViewController *controller = [self _viewControllerForAncestor];
