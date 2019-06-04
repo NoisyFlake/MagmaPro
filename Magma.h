@@ -1,6 +1,14 @@
+@interface CCUICAPackageView : UIView
+@end
+
 @interface CCUIRoundButton : UIControl
 @property (nonatomic,retain) UIView * selectedStateBackgroundView;
+@property (nonatomic,retain) UIView * alternateSelectedStateBackgroundView;
+@property (nonatomic,retain) UIView * normalStateBackgroundView;
+@property (nonatomic,retain) CCUICAPackageView * glyphPackageView;
+@property (nonatomic,retain) UIImageView * glyphImageView;
 -(id)_viewControllerForAncestor;
+-(void)colorButton;
 @end
 
 @interface CCUIButtonModuleView : UIControl
@@ -74,3 +82,4 @@ static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
 static void colorLabel(UILabel *label, UIColor *color);
 static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite);
+static void colorLayersForConnectivity(NSArray *layers, CGColorRef color);

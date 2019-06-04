@@ -4,31 +4,72 @@
 NSMutableDictionary *prefs, *defaultPrefs;
 
 %hook CCUIRoundButton
--(void)layoutSubviews {
+-(void)didMoveToWindow {
 	%orig;
+	[self colorButton];
+}
 
+-(void)_updateForStateChange {
+	%orig;
+	[self colorButton];
+}
+
+%new
+-(void)colorButton {
 	UIViewController *controller = [self _viewControllerForAncestor];
-	UIView *backgroundView = self.selectedStateBackgroundView;
 
-	NSString *toggleColor = nil;
+	UIView *activeBackground = self.selectedStateBackgroundView;
+	UIView *glyph = self.glyphPackageView == nil ? self : self.glyphPackageView;
+
+	bool isEnabled = activeBackground.alpha > 0 ? YES : NO;
+
+	NSString *description = nil;
 	if ([controller isMemberOfClass:%c(CCUIConnectivityAirDropViewController)]) {
-		toggleColor = getValue(@"toggleAirDrop");
+		description = @"toggleAirDrop";
 	} else if ([controller isMemberOfClass:%c(CCUIConnectivityAirplaneViewController)]) {
-		toggleColor = getValue(@"toggleAirplaneMode");
+		description = @"toggleAirplaneMode";
 	} else if ([controller isMemberOfClass:%c(CCUIConnectivityBluetoothViewController)]) {
-		toggleColor = getValue(@"toggleBluetooth");
+		description = @"toggleBluetooth";
 	} else if ([controller isMemberOfClass:%c(CCUIConnectivityCellularDataViewController)]) {
-		toggleColor = getValue(@"toggleCellularData");
+		description = @"toggleCellularData";
 	} else if ([controller isMemberOfClass:%c(CCUIConnectivityHotspotViewController)]) {
-		toggleColor = getValue(@"toggleHotspot");
+		description = @"toggleHotspot";
 	} else if ([controller isMemberOfClass:%c(CCUIConnectivityWifiViewController)]) {
-		toggleColor = getValue(@"toggleWiFi");
+		description = @"toggleWiFi";
 	}
 
-	if (toggleColor == nil) return;
+	NSString *selectedColor = isEnabled ? getValue(description) : getValue([NSString stringWithFormat:@"%@_inactive", description]);
+	if (selectedColor == nil) return;
 
-	[backgroundView setBackgroundColor:[UIColor RGBAColorFromHexString:toggleColor]];
+	UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
+	UIColor *activeBackgroundColor = [UIColor clearColor];
+
+	if (isEnabled && getBool(@"invertConnectivity")) {
+		activeBackgroundColor = glyphColor;
+		glyphColor = [UIColor whiteColor];
+	} else if(!isEnabled && getBool(@"removeConnectivityBackground")) {
+		UIView *disabledBackground = self.normalStateBackgroundView;
+		[disabledBackground setAlpha:0];
+	}
+
+	if ([description isEqual:@"toggleWiFi"] || [description isEqual:@"toggleBluetooth"]) {
+		colorLayersForConnectivity(glyph.layer.sublayers, [glyphColor CGColor]);
+		if (!isEnabled) {
+			UIView *alternateBackground = self.alternateSelectedStateBackgroundView;
+			[alternateBackground setAlpha:0];
+
+			if (!getBool(@"removeConnectivityBackground")) {
+				UIView *disabledBackground = self.normalStateBackgroundView;
+				[disabledBackground setAlpha:1];
+			}
+		}
+	} else {
+		colorLayers(glyph.layer.sublayers, [glyphColor CGColor], YES);
+	}
+
+	[activeBackground setBackgroundColor:activeBackgroundColor];
 }
+
 %end
 
 %hook CCUIButtonModuleView
@@ -105,7 +146,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		bgColorAddColor = [UIColor clearColor];
 	}
 
-	colorLayers(self.layer.sublayers, [glyphColor CGColor], !isEnabled);
+	colorLayers(self.layer.sublayers, [glyphColor CGColor], YES);
 
 	// Color labels (e.g. for AirPlay)
 	for (UIView* subview in controller.view.allSubviews) {
@@ -194,11 +235,11 @@ static BOOL isNotAColor(CGColorRef cgColor, BOOL colorWhite) {
 	const CGFloat *components = CGColorGetComponents(cgColor);
 	NSString *color = [NSString stringWithFormat:@"%f,%f,%f", components[0], components[1], components[2]];
 	NSString *white = [NSString stringWithFormat:@"%f,%f,%f", 1.0, 1.0, 1.0];
-	NSString *black = [NSString stringWithFormat:@"%f,%f,%f", 0.0, 0.0, 0.0];
+	// NSString *black = [NSString stringWithFormat:@"%f,%f,%f", 0.0, 0.0, 0.0];
 
 	if (!colorWhite && (CGColorGetNumberOfComponents(cgColor) <= 3 || [color isEqual:white])) return YES;
 
-	return ([color isEqual:black] || components[3] == 0);
+	return (components[3] == 0);
 }
 
 static void colorLabel(UILabel *label, UIColor *color) {
@@ -230,11 +271,43 @@ static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite) {
 			if (!isNotAColor(contentColor, colorWhite)) {
 				sublayer.contentsMultiplyColor = color;
 			}
+
 		}
 
 		colorLayers(sublayer.sublayers, color, colorWhite);
 	}
 }
+
+static void colorLayersForConnectivity(NSArray *layers, CGColorRef color) {
+	for (CALayer *sublayer in layers) {
+		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
+			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
+			if (!isNotAColor(fillColor, YES)) {
+				((CAShapeLayer *)sublayer).fillColor = color;
+			}
+		} else {
+			CGColorRef backgroundColor = sublayer.backgroundColor;
+			if (!isNotAColor(backgroundColor, YES)) {
+				sublayer.backgroundColor = [UIColor clearColor].CGColor;
+			}
+
+			CGColorRef borderColor = sublayer.borderColor;
+			if (!isNotAColor(borderColor, YES)) {
+				sublayer.borderColor = color;
+			}
+
+			CGColorRef contentColor = sublayer.contentsMultiplyColor;
+			if (!isNotAColor(contentColor, YES)) {
+				sublayer.contentsMultiplyColor = color;
+				if (sublayer.opacity == 0) sublayer.opacity = 1;
+			}
+
+		}
+
+		colorLayersForConnectivity(sublayer.sublayers, color);
+	}
+}
+
 
 // ----- PREFERENCE HANDLING ----- //
 

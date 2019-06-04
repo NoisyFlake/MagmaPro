@@ -5,8 +5,8 @@
 	<key>enabled</key>
 	<true/>
 
-	<key>invertToggles</key>
-	<false/>
+	<key>invertConnectivity</key>
+	<true/>
 
 	<key>toggleAirDrop</key>
 	<string>#007AFF:1.00</string>
@@ -20,6 +20,25 @@
 	<string>#4CD964:1.00</string>
 	<key>toggleWiFi</key>
 	<string>#007AFF:1.00</string>
+
+	<key>removeConnectivityBackground</key>
+	<false/>
+
+	<key>toggleAirDrop_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>toggleAirplaneMode_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>toggleBluetooth_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>toggleCellularData_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>toggleHotspot_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>toggleWiFi_inactive</key>
+	<string>#FFFFFF:1.00</string>
+
+	<key>invertToggles</key>
+	<false/>
 
 	<key>CCUIOrientationLockModule</key>
 	<string>#FF5A63:1.00</string>
