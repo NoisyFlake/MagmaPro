@@ -1,31 +1,17 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 
-#import <AppList/AppList.h>
-
-@interface MagmaAppLaunchers : PSListController
-@property (nonatomic, retain) ALApplicationList *appList;
-@property (nonatomic, retain) NSString *displayIdentifier;
+@interface MagmaDisabledToggles : PSListController
 @end
 
 #include "MagmaPrefs.h"
+#import <spawn.h>
 
-@implementation MagmaAppLaunchers
-
--(void)viewWillAppear:(BOOL)animated {
-    _appList = [ALApplicationList sharedApplicationList];
-    _displayIdentifier = [[self specifier] name];
-    self.title = [_appList valueForKey:@"displayName" forDisplayIdentifier:_displayIdentifier];
-
-    [super viewWillAppear:animated];
-}
+@implementation MagmaDisabledToggles
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"AppLaunchers" target:self] retain];
-
-		// Dynamically set the key value to the bundleID of the selected App
-		[(PSSpecifier*)_specifiers[1] setProperty:[[self specifier] name] forKey:@"key"];
+		_specifiers = [[self loadSpecifiersFromPlistName:@"DisabledToggles" target:self] retain];
 	}
 
 	return _specifiers;
@@ -41,7 +27,6 @@
 	NSString *path = [NSString stringWithFormat:@"/User/Library/Preferences/%@.plist", specifier.properties[@"defaults"]];
 	NSMutableDictionary *settings = [NSMutableDictionary dictionaryWithContentsOfFile:path];
 	[settings setObject:value forKey:specifier.properties[@"key"]];
-	// HBLogDebug(@"Identifier: %@", _appList);
 	[settings writeToFile:path atomically:YES];
 	CFStringRef notificationName = (CFStringRef)specifier.properties[@"PostNotification"];
 	if (notificationName) {

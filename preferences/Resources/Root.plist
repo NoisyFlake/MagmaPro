@@ -79,15 +79,6 @@
             <key>label</key>            		<string>WiFi</string>
             <key>PostNotification</key> 		<string>com.noisyflake.magmapro/prefsupdated</string>
         </dict>
-        <dict>
-            <key>cell</key>                     <string>PSLinkCell</string>
-            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
-            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>com.apple.calculator</string>
-            <key>alpha</key>                    <true/>
-            <key>label</key>                    <string>Calculator</string>
-            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
-        </dict>
 
         <dict>
             <key>cell</key>                     <string>PSGroupCell</string>
@@ -98,6 +89,12 @@
             <key>isController</key>             <true/>
             <key>detail</key>                   <string>MagmaEnabledToggles</string>
             <key>label</key>                    <string>Enabled State</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>isController</key>             <true/>
+            <key>detail</key>                   <string>MagmaDisabledToggles</string>
+            <key>label</key>                    <string>Disabled State</string>
         </dict>
 
         <dict>

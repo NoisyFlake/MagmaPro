@@ -55,8 +55,41 @@
 	<string>#FF0000:1.00</string>
 	<key>XBReduceWhiteModule</key>
 	<string>#78A3D4:1.00</string>
-	<key>CTXTestModule</key>
-	<string>#5E67D6:1.00</string>
+
+	<key>CCUIOrientationLockModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>DNDUIControlCenterModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCUICarModeModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCUILowPowerModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>RPControlCenterModuleViewController_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCUIFlashlightModuleViewController_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>MPAVAirPlayMirroringMenuModuleViewController_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>LocationModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>MTCCTimerViewController_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCUIMuteModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCVPNModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>WatusiDeliveryReceipts_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>WatusiLastSeen_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>WatusiReadReceipts_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>AutoLock_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>CCVibrationModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>XBReduceWhiteModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
 
 	<key>sliderBrightness</key>
 	<string>#000000:0.00</string>

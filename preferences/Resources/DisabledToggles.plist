@@ -5,18 +5,6 @@
     <key>items</key>
     <array>
         <dict>
-            <key>cell</key>                     <string>PSGroupCell</string>
-            <key>footerText</key>               <string>Changing this option requires a respring</string>
-        </dict>
-        <dict>
-            <key>cell</key>                     <string>PSSwitchCell</string>
-            <key>default</key>                  <false/>
-            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>invertToggles</string>
-            <key>label</key>                    <string>Colorize Background</string>
-            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
-        </dict>
-        <dict>
 			<key>cell</key> 					<string>PSGroupCell</string>
 			<key>label</key> 					<string>Stock Toggles</string>
 		</dict>
@@ -24,7 +12,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>MPAVAirPlayMirroringMenuModuleViewController</string>
+            <key>key</key>                      <string>MPAVAirPlayMirroringMenuModuleViewController_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>AirPlay</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -33,7 +21,7 @@
             <key>cell</key>            			<string>PSLinkCell</string>
             <key>cellClass</key>            	<string>MagmaColorPickerCell</string>
             <key>defaults</key>					<string>com.noisyflake.magmapro</string>
-            <key>key</key>            			<string>DNDUIControlCenterModule</string>
+            <key>key</key>            			<string>DNDUIControlCenterModule_inactive</string>
             <key>alpha</key>            		<true/>
             <key>label</key>            		<string>Do Not Disturb</string>
             <key>PostNotification</key> 		<string>com.noisyflake.magmapro/prefsupdated</string>
@@ -42,7 +30,7 @@
             <key>cell</key>            			<string>PSLinkCell</string>
             <key>cellClass</key>            	<string>MagmaColorPickerCell</string>
             <key>defaults</key>					<string>com.noisyflake.magmapro</string>
-            <key>key</key>            			<string>CCUICarModeModule</string>
+            <key>key</key>            			<string>CCUICarModeModule_inactive</string>
             <key>alpha</key>            		<true/>
             <key>label</key>            		<string>Do Not Disturb (Car Mode)</string>
             <key>PostNotification</key> 		<string>com.noisyflake.magmapro/prefsupdated</string>
@@ -51,7 +39,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>CCUIFlashlightModuleViewController</string>
+            <key>key</key>                      <string>CCUIFlashlightModuleViewController_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Flashlight</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -60,7 +48,7 @@
             <key>cell</key>            			<string>PSLinkCell</string>
             <key>cellClass</key>            	<string>MagmaColorPickerCell</string>
             <key>defaults</key>					<string>com.noisyflake.magmapro</string>
-            <key>key</key>            			<string>CCUILowPowerModule</string>
+            <key>key</key>            			<string>CCUILowPowerModule_inactive</string>
             <key>alpha</key>            		<true/>
             <key>label</key>            		<string>Low Power Mode</string>
             <key>PostNotification</key> 		<string>com.noisyflake.magmapro/prefsupdated</string>
@@ -69,7 +57,7 @@
             <key>cell</key>            			<string>PSLinkCell</string>
             <key>cellClass</key>            	<string>MagmaColorPickerCell</string>
             <key>defaults</key>					<string>com.noisyflake.magmapro</string>
-            <key>key</key>            			<string>RPControlCenterModuleViewController</string>
+            <key>key</key>            			<string>RPControlCenterModuleViewController_inactive</string>
             <key>alpha</key>            		<true/>
             <key>label</key>            		<string>Recording</string>
             <key>PostNotification</key> 		<string>com.noisyflake.magmapro/prefsupdated</string>
@@ -78,7 +66,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>CCUIOrientationLockModule</string>
+            <key>key</key>                      <string>CCUIOrientationLockModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Rotation Lock</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -87,7 +75,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>MTCCTimerViewController</string>
+            <key>key</key>                      <string>MTCCTimerViewController_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Timer</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -101,7 +89,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>AutoLock</string>
+            <key>key</key>                      <string>AutoLock_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Auto Lock</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -110,7 +98,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>LocationModule</string>
+            <key>key</key>                      <string>LocationModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Location Services</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -119,7 +107,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>CCUIMuteModule</string>
+            <key>key</key>                      <string>CCUIMuteModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Mute</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -128,7 +116,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>XBReduceWhiteModule</string>
+            <key>key</key>                      <string>XBReduceWhiteModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Reduce White Point</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -137,7 +125,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>CCVibrationModule</string>
+            <key>key</key>                      <string>CCVibrationModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Vibration</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -146,7 +134,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>CCVPNModule</string>
+            <key>key</key>                      <string>CCVPNModule_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>VPN</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -155,7 +143,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>WatusiDeliveryReceipts</string>
+            <key>key</key>                      <string>WatusiDeliveryReceipts_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Watusi Delivery Receipts</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -164,7 +152,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>WatusiLastSeen</string>
+            <key>key</key>                      <string>WatusiLastSeen_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Watusi Last Seen</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -173,7 +161,7 @@
             <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
-            <key>key</key>                      <string>WatusiReadReceipts</string>
+            <key>key</key>                      <string>WatusiReadReceipts_inactive</string>
             <key>alpha</key>                    <true/>
             <key>label</key>                    <string>Watusi Read Receipts</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
@@ -181,6 +169,6 @@
 </array>
 
     <key>title</key>
-    <string>Toggles (Enabled)</string>
+    <string>Toggles (Disabled)</string>
 </dict>
 </plist>
