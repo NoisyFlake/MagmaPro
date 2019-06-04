@@ -1,13 +1,13 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 
-@interface MediaControls : PSListController
+@interface MagmaMediaControls : PSListController
 @end
 
 #include "MagmaPrefs.h"
 #import <spawn.h>
 
-@implementation MediaControls
+@implementation MagmaMediaControls
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {

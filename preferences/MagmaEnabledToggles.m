@@ -1,13 +1,13 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 
-@interface EnabledToggles : PSListController
+@interface MagmaEnabledToggles : PSListController
 @end
 
 #include "MagmaPrefs.h"
 #import <spawn.h>
 
-@implementation EnabledToggles
+@implementation MagmaEnabledToggles
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {

@@ -67,7 +67,8 @@
     _colorPreview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 29, 29)];
 
     _colorPreview.layer.cornerRadius = _colorPreview.frame.size.width / 2;
-    _colorPreview.layer.borderWidth = 0;
+    _colorPreview.layer.borderWidth = 0.5;
+    _colorPreview.layer.borderColor = [UIColor colorWithRed:0.67 green:0.67 blue:0.67 alpha:1.0].CGColor;
 
     [self setAccessoryView:_colorPreview];
     [self updateCellDisplay];
@@ -81,6 +82,8 @@
         NSMutableDictionary *_defaultPrefs = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/Library/PreferenceBundles/MagmaProPrefs.bundle/defaults.plist"];
         color = [_defaultPrefs valueForKey:[self.specifier propertyForKey:@"key"]];
     }
+
+    if (color == nil) color = @"#FFFFFF:1.00";
 
     return color;
 }

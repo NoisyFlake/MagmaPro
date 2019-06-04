@@ -17,26 +17,17 @@
     _displayIdentifier = [[self specifier] name];
     self.title = [_appList valueForKey:@"displayName" forDisplayIdentifier:_displayIdentifier];
 
-    // HBLogDebug(@"Identifier: %@", [self specifier]);
-
-    // PSSpecifier *spec = _specifiers[0];
-    PSSpecifier *spec = [self specifierAtIndex:1];
-    spec.identifier = _displayIdentifier;
-    HBLogDebug(@"SPECIFIER: %@", spec);
-	// [(PSSpecifier *)_specifiers[1] setIdentifier: _displayIdentifier];
-	// // _specifiers[0] = spec;
-	// HBLogDebug(@"Spec: %@ %@", _specifiers, _displayIdentifier);
-	[self reloadSpecifierAtIndex:1 animated:YES];
-
     [super viewWillAppear:animated];
 }
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
 		_specifiers = [[self loadSpecifiersFromPlistName:@"AppLaunchers" target:self] retain];
+
+		// Dynamically set the key value to the bundleID of the selected App
+		[(PSSpecifier*)_specifiers[0] setProperty:[[self specifier] name] forKey:@"key"];
 	}
 
-	// HBLogDebug(@"specifiers: %@", _specifiers[0].id);
 
 
 	return _specifiers;

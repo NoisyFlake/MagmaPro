@@ -21,9 +21,6 @@
 	<key>toggleWiFi</key>
 	<string>#007AFF:1.00</string>
 
-	<key>com.apple.calculator</key>
-	<string>#FFFFFF:1.00</string>
-
 	<key>CCUIOrientationLockModule</key>
 	<string>#FF5A63:1.00</string>
 	<key>DNDUIControlCenterModule</key>

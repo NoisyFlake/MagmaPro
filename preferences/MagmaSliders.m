@@ -1,13 +1,13 @@
 #import <Preferences/PSListController.h>
 #import <Preferences/PSSpecifier.h>
 
-@interface Sliders : PSListController
+@interface MagmaSliders : PSListController
 @end
 
 #include "MagmaPrefs.h"
 #import <spawn.h>
 
-@implementation Sliders
+@implementation MagmaSliders
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {

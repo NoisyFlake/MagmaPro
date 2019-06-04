@@ -38,9 +38,17 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	// App Shortcuts need to be only colored once and have no state
 	UIViewController *controller = [self _viewControllerForAncestor];
 	if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
-		[self colorButton];
+		CCUIAppLauncherModule *module = ((CCUIAppLauncherViewController *)controller).module;
+		NSString *description = module.applicationIdentifier;
+
+		NSString *toggleColor = getValue(description);
+		if (toggleColor == nil) return;
+
+		UIColor *glyphColor = [UIColor RGBAColorFromHexString:toggleColor];
+		colorLayers(self.layer.sublayers, [glyphColor CGColor], YES);
 	}
 }
+
 -(void)setGlyphState:(NSString *)arg1 {
 	%orig;
 	[self colorButton];
@@ -61,26 +69,16 @@ NSMutableDictionary *prefs, *defaultPrefs;
 -(void)colorButton {
 	UIViewController *controller = [self _viewControllerForAncestor];
 
-	bool isAppShortcut = NO;
-
 	NSString *description = [controller description];
 	if ([controller isMemberOfClass:%c(CCUIToggleViewController)]) {
 		CCUIToggleModule *module = ((CCUIToggleViewController *)controller).module;
 		description = [module description];
-	} else if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
-		CCUIAppLauncherModule *module = ((CCUIAppLauncherViewController *)controller).module;
-		description = module.applicationIdentifier;
-		isAppShortcut = YES;
 	}
 
-	if (!isAppShortcut) {
-		// Get actual module name from description
-		NSUInteger location = [description rangeOfString:@":"].location;
-		if(location == NSNotFound) return;
-		description = [description substringWithRange:NSMakeRange(1, location - 1)];
-	}
-
-	HBLogDebug(@"Found description: %@", description);
+	// Get actual module name from description
+	NSUInteger location = [description rangeOfString:@":"].location;
+	if(location == NSNotFound) return;
+	description = [description substringWithRange:NSMakeRange(1, location - 1)];
 
 	NSString *toggleColor = getValue(description);
 
@@ -96,15 +94,16 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	UIColor *bgColorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
 	double bgBrightness = 0.52;
 
-	if (!isAppShortcut && getBool(@"invertToggles")) {
+	if (getBool(@"invertToggles")) {
 		backgroundColor = glyphColor;
 		glyphColor = [UIColor whiteColor];
 		bgBrightness = 0;
 		bgColorAddColor = [UIColor clearColor];
 	}
 
-	colorLayers(self.layer.sublayers, [glyphColor CGColor], isAppShortcut);
+	colorLayers(self.layer.sublayers, [glyphColor CGColor], NO);
 
+	// Color BackdropView (which is only visible on active toggles)
 	for (_MTBackdropView* backdropView in self.allSubviews) {
 		if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
 			backdropView.backgroundColor = backgroundColor;
@@ -113,6 +112,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		}
 	}
 
+	// Color labels (e.g. for AirPlay)
 	for (UIView* subview in controller.view.allSubviews) {
 		if ([subview isMemberOfClass:%c(UILabel)]) {
 			colorLabel((UILabel *)subview, glyphColor);
