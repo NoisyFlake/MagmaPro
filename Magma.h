@@ -81,5 +81,5 @@
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
 static void colorLabel(UILabel *label, UIColor *color);
-static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite);
+static void colorLayers(NSArray *layers, CGColorRef color);
 static void colorLayersForConnectivity(NSArray *layers, CGColorRef color);

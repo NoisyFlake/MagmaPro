@@ -6,15 +6,27 @@
     <array>
         <dict>
             <key>cell</key>                     <string>PSGroupCell</string>
-            <key>footerText</key>               <string>Changing this option requires a respring</string>
+            <key>footerText</key>               <string>Changing these options requires a respring</string>
         </dict>
         <dict>
             <key>cell</key>                     <string>PSSwitchCell</string>
             <key>default</key>                  <false/>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
             <key>key</key>                      <string>invertToggles</string>
+            <key>id</key>                       <string>invertTogglesSpec</string>
             <key>label</key>                    <string>Colorize Background</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+            <key>set</key>                      <string>setInvertToggles:specifier:</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSSwitchCell</string>
+            <key>default</key>                  <false/>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>removeToggleBackground</string>
+            <key>id</key>                       <string>removeToggleBackgroundSpec</string>
+            <key>label</key>                    <string>Remove Background</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+            <key>set</key>                      <string>setRemoveToggleBackground:specifier:</string>
         </dict>
         <dict>
 			<key>cell</key> 					<string>PSGroupCell</string>

@@ -34,6 +34,24 @@
 	}
 }
 
+-(void)setInvertToggles:(id)value specifier:(PSSpecifier *)specifier {
+	if([value boolValue]) {
+		[self setPreferenceValue:@(NO) specifier:[self specifierForID:@"removeToggleBackgroundSpec"]];
+	}
+
+	[self setPreferenceValue:value specifier:specifier];
+	[self reloadSpecifierID:@"removeToggleBackgroundSpec" animated:YES];
+}
+
+-(void)setRemoveToggleBackground:(id)value specifier:(PSSpecifier *)specifier {
+	if([value boolValue]) {
+		[self setPreferenceValue:@(NO) specifier:[self specifierForID:@"invertTogglesSpec"]];
+	}
+
+	[self setPreferenceValue:value specifier:specifier];
+	[self reloadSpecifierID:@"invertTogglesSpec" animated:YES];
+}
+
 @end
 
 

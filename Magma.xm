@@ -69,7 +69,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 			}
 		}
 	} else {
-		colorLayers(glyph.layer.sublayers, [glyphColor CGColor], YES);
+		colorLayers(glyph.layer.sublayers, [glyphColor CGColor]);
 	}
 
 	[activeBackground setBackgroundColor:activeBackgroundColor];
@@ -91,7 +91,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		if (selectedColor == nil) return;
 
 		UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
-		colorLayers(self.layer.sublayers, [glyphColor CGColor], YES);
+		colorLayers(self.layer.sublayers, [glyphColor CGColor]);
 	} else if ([[controller description] containsString:@"Flashlight"]) {
 		// Fix for the initial color of the flashlight after a respring
 		[self colorButton];
@@ -151,7 +151,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		bgColorAddColor = [UIColor clearColor];
 	}
 
-	colorLayers(self.layer.sublayers, [glyphColor CGColor], YES);
+	colorLayers(self.layer.sublayers, [glyphColor CGColor]);
 
 	// Color labels (e.g. for AirPlay)
 	for (UIView* subview in controller.view.allSubviews) {
@@ -165,9 +165,13 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	// Color BackdropView (which is only visible on active toggles)
 	for (_MTBackdropView* backdropView in self.allSubviews) {
 		if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
-			backdropView.backgroundColor = backgroundColor;
-			backdropView.brightness = bgBrightness;
-			backdropView.colorAddColor = bgColorAddColor;
+			if (getBool(@"removeToggleBackground")) {
+				backdropView.alpha = 0;
+			} else {
+				backdropView.backgroundColor = backgroundColor;
+				backdropView.brightness = bgBrightness;
+				backdropView.colorAddColor = bgColorAddColor;
+			}
 		}
 	}
 
@@ -219,67 +223,57 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 	if (sliderColor == nil) return;
 
-	backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
-	colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor], NO);
-
 	if (![sliderColor containsString:@":0.00"]) {
 		backdropView.brightness = 0;
 		backdropView.colorAddColor = [UIColor clearColor];
-	} else {
-		backdropView.brightness = 0.52;
-		backdropView.colorAddColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.25];
+		backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
+		colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
 	}
 
 }
 %end
 
-static BOOL isNotAColor(CGColorRef cgColor, BOOL colorWhite) {
+// Don't color transparent areas
+static BOOL isNotAColor(CGColorRef cgColor) {
 	if (cgColor == nil) return YES;
 
-	// There is probably a better way to do this, but it works for now
 	const CGFloat *components = CGColorGetComponents(cgColor);
-	NSString *color = [NSString stringWithFormat:@"%f,%f,%f", components[0], components[1], components[2]];
-	NSString *white = [NSString stringWithFormat:@"%f,%f,%f", 1.0, 1.0, 1.0];
-	// NSString *black = [NSString stringWithFormat:@"%f,%f,%f", 0.0, 0.0, 0.0];
-
-	if (!colorWhite && (CGColorGetNumberOfComponents(cgColor) <= 3 || [color isEqual:white])) return YES;
-
-	return (components[3] == 0);
+	return components[3] == 0;
 }
 
 static void colorLabel(UILabel *label, UIColor *color) {
 	UIColor *labelColor = label.textColor;
-	if (!isNotAColor([labelColor CGColor], NO)) {
+	if (!isNotAColor([labelColor CGColor])) {
 		label.textColor = color;
 	}
 }
 
-static void colorLayers(NSArray *layers, CGColorRef color, BOOL colorWhite) {
+static void colorLayers(NSArray *layers, CGColorRef color) {
 	for (CALayer *sublayer in layers) {
 		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
 			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
-			if (!isNotAColor(fillColor, colorWhite)) {
+			if (!isNotAColor(fillColor)) {
 				((CAShapeLayer *)sublayer).fillColor = color;
 			}
 		} else {
 			CGColorRef backgroundColor = sublayer.backgroundColor;
-			if (!isNotAColor(backgroundColor, colorWhite)) {
+			if (!isNotAColor(backgroundColor)) {
 				sublayer.backgroundColor = color;
 			}
 
 			CGColorRef borderColor = sublayer.borderColor;
-			if (!isNotAColor(borderColor, colorWhite)) {
+			if (!isNotAColor(borderColor)) {
 				sublayer.borderColor = color;
 			}
 
 			CGColorRef contentColor = sublayer.contentsMultiplyColor;
-			if (!isNotAColor(contentColor, colorWhite)) {
+			if (!isNotAColor(contentColor)) {
 				sublayer.contentsMultiplyColor = color;
 			}
 
 		}
 
-		colorLayers(sublayer.sublayers, color, colorWhite);
+		colorLayers(sublayer.sublayers, color);
 	}
 }
 
@@ -287,22 +281,22 @@ static void colorLayersForConnectivity(NSArray *layers, CGColorRef color) {
 	for (CALayer *sublayer in layers) {
 		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
 			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
-			if (!isNotAColor(fillColor, YES)) {
+			if (!isNotAColor(fillColor)) {
 				((CAShapeLayer *)sublayer).fillColor = color;
 			}
 		} else {
 			CGColorRef backgroundColor = sublayer.backgroundColor;
-			if (!isNotAColor(backgroundColor, YES)) {
+			if (!isNotAColor(backgroundColor)) {
 				sublayer.backgroundColor = [UIColor clearColor].CGColor;
 			}
 
 			CGColorRef borderColor = sublayer.borderColor;
-			if (!isNotAColor(borderColor, YES)) {
+			if (!isNotAColor(borderColor)) {
 				sublayer.borderColor = color;
 			}
 
 			CGColorRef contentColor = sublayer.contentsMultiplyColor;
-			if (!isNotAColor(contentColor, YES)) {
+			if (!isNotAColor(contentColor)) {
 				sublayer.contentsMultiplyColor = color;
 				if (sublayer.opacity == 0) sublayer.opacity = 1;
 			}
