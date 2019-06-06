@@ -113,6 +113,14 @@
 	<string>#FFFFFF:1.00</string>
 	<key>RespringModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
+	<key>LockModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>RebootModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>SafeModeModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
+	<key>UICacheModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
 
 	<key>sliderBrightness</key>
 	<string>#000000:0.00</string>

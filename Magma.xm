@@ -106,10 +106,10 @@ NSMutableDictionary *prefs, *defaultPrefs;
 -(void)_updateForStateChange {
 	%orig;
 
-	// Workaround for the flashlight because it doesn't respond to setGlyphState
+	// Workaround for modules that don't respond to setGlyphState
 	UIViewController *controller = [self _viewControllerForAncestor];
 	NSString *description = [controller description];
-	if ([description containsString:@"Flashlight"]) {
+	if ([description containsString:@"Flashlight"] || [description containsString:@"RPControlCenter"]) {
 		[self colorButton];
 	}
 }
