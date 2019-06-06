@@ -59,7 +59,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 	if ([description isEqual:@"toggleWiFi"] || [description isEqual:@"toggleBluetooth"]) {
 		colorLayersForConnectivity(glyph.layer.sublayers, [glyphColor CGColor]);
-		if (!isEnabled) {
+		if (!isEnabled && [self respondsToSelector:@selector(alternateSelectedStateBackgroundView)]) {
 			UIView *alternateBackground = self.alternateSelectedStateBackgroundView;
 			[alternateBackground setAlpha:0];
 
@@ -130,7 +130,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	description = [description substringWithRange:NSMakeRange(1, location - 1)];
 
 	bool isEnabled;
-	for (MTMaterialView* matView in self.allSubviews) {
+	for (MTMaterialView* matView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
 		if ([matView isMemberOfClass:%c(MTMaterialView)]) {
 			isEnabled = matView.alpha > 0 ? YES: NO;
 		}

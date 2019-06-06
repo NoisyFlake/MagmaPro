@@ -1,6 +1,6 @@
 Package: com.noisyflake.magmapro
 Name: Magma Pro
-Depends: mobilesubstrate, firmware (>= 12.0), me.nepeta.libcolorpicker, applist
+Depends: mobilesubstrate, firmware (>= 11.0), me.nepeta.libcolorpicker, applist
 Conflicts: com.noisyflake.magma
 Version: 1.0.1
 Architecture: iphoneos-arm
