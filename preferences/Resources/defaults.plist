@@ -5,6 +5,9 @@
 	<key>enabled</key>
 	<true/>
 
+	<key>enableConnectivity</key>
+	<true/>
+
 	<key>invertConnectivity</key>
 	<true/>
 
@@ -122,6 +125,8 @@
 	<key>UICacheModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
 
+	<key>enableSliders</key>
+	<true/>
 	<key>sliderBrightness</key>
 	<string>#FFFFFF:0.00</string>
 	<key>sliderVolume</key>
@@ -135,6 +140,8 @@
 	<key>sliderCCRingerGlyph</key>
 	<string>#FFFFFF:0.00</string>
 
+	<key>enableMediaControls</key>
+	<true/>
 	<key>mediaControlsLeftButton</key>
 	<string>#FFFFFF:1.00</string>
 	<key>mediaControlsMiddleButton</key>

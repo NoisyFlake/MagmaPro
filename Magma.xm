@@ -3,78 +3,80 @@
 
 NSMutableDictionary *prefs, *defaultPrefs;
 
-%hook CCUIRoundButton
--(void)didMoveToWindow {
-	%orig;
-	[self colorButton];
-}
-
--(void)_updateForStateChange {
-	%orig;
-	[self colorButton];
-}
-
--(void)layoutSubviews {
-	%orig;
-	[self colorButton];
-}
-
-%new
--(void)colorButton {
-	UIViewController *controller = [self _viewControllerForAncestor];
-
-	UIView *activeBackground = self.selectedStateBackgroundView;
-	UIView *glyph = self.glyphPackageView == nil ? self : self.glyphPackageView;
-
-	bool isEnabled = activeBackground.alpha > 0 ? YES : NO;
-
-	NSString *description = nil;
-	if ([controller isMemberOfClass:%c(CCUIConnectivityAirDropViewController)]) {
-		description = @"toggleAirDrop";
-	} else if ([controller isMemberOfClass:%c(CCUIConnectivityAirplaneViewController)]) {
-		description = @"toggleAirplaneMode";
-	} else if ([controller isMemberOfClass:%c(CCUIConnectivityBluetoothViewController)]) {
-		description = @"toggleBluetooth";
-	} else if ([controller isMemberOfClass:%c(CCUIConnectivityCellularDataViewController)]) {
-		description = @"toggleCellularData";
-	} else if ([controller isMemberOfClass:%c(CCUIConnectivityHotspotViewController)]) {
-		description = @"toggleHotspot";
-	} else if ([controller isMemberOfClass:%c(CCUIConnectivityWifiViewController)]) {
-		description = @"toggleWiFi";
+%group Connectivity
+	%hook CCUIRoundButton
+	-(void)didMoveToWindow {
+		%orig;
+		[self colorButton];
 	}
 
-	NSString *selectedColor = isEnabled ? getValue(description) : getValue([NSString stringWithFormat:@"%@_inactive", description]);
-	if (selectedColor == nil) return;
-
-	UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
-	UIColor *activeBackgroundColor = [UIColor clearColor];
-
-	if (isEnabled && getBool(@"invertConnectivity")) {
-		activeBackgroundColor = glyphColor;
-		glyphColor = [UIColor whiteColor];
-	} else if(!isEnabled && getBool(@"removeConnectivityBackground")) {
-		UIView *disabledBackground = self.normalStateBackgroundView;
-		[disabledBackground setAlpha:0];
+	-(void)_updateForStateChange {
+		%orig;
+		[self colorButton];
 	}
 
-	if ([description isEqual:@"toggleWiFi"] || [description isEqual:@"toggleBluetooth"]) {
-		colorLayersForConnectivity(glyph.layer.sublayers, [glyphColor CGColor]);
-		if (!isEnabled && [self respondsToSelector:@selector(alternateSelectedStateBackgroundView)]) {
-			UIView *alternateBackground = self.alternateSelectedStateBackgroundView;
-			[alternateBackground setAlpha:0];
+	-(void)layoutSubviews {
+		%orig;
+		[self colorButton];
+	}
 
-			if (!getBool(@"removeConnectivityBackground")) {
-				UIView *disabledBackground = self.normalStateBackgroundView;
-				[disabledBackground setAlpha:1];
-			}
+	%new
+	-(void)colorButton {
+		UIViewController *controller = [self _viewControllerForAncestor];
+
+		UIView *activeBackground = self.selectedStateBackgroundView;
+		UIView *glyph = self.glyphPackageView == nil ? self : self.glyphPackageView;
+
+		bool isEnabled = activeBackground.alpha > 0 ? YES : NO;
+
+		NSString *description = nil;
+		if ([controller isMemberOfClass:%c(CCUIConnectivityAirDropViewController)]) {
+			description = @"toggleAirDrop";
+		} else if ([controller isMemberOfClass:%c(CCUIConnectivityAirplaneViewController)]) {
+			description = @"toggleAirplaneMode";
+		} else if ([controller isMemberOfClass:%c(CCUIConnectivityBluetoothViewController)]) {
+			description = @"toggleBluetooth";
+		} else if ([controller isMemberOfClass:%c(CCUIConnectivityCellularDataViewController)]) {
+			description = @"toggleCellularData";
+		} else if ([controller isMemberOfClass:%c(CCUIConnectivityHotspotViewController)]) {
+			description = @"toggleHotspot";
+		} else if ([controller isMemberOfClass:%c(CCUIConnectivityWifiViewController)]) {
+			description = @"toggleWiFi";
 		}
-	} else {
-		colorLayers(glyph.layer.sublayers, [glyphColor CGColor]);
+
+		NSString *selectedColor = isEnabled ? getValue(description) : getValue([NSString stringWithFormat:@"%@_inactive", description]);
+		if (selectedColor == nil) return;
+
+		UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
+		UIColor *activeBackgroundColor = [UIColor clearColor];
+
+		if (isEnabled && getBool(@"invertConnectivity")) {
+			activeBackgroundColor = glyphColor;
+			glyphColor = [UIColor whiteColor];
+		} else if(!isEnabled && getBool(@"removeConnectivityBackground")) {
+			UIView *disabledBackground = self.normalStateBackgroundView;
+			[disabledBackground setAlpha:0];
+		}
+
+		if ([description isEqual:@"toggleWiFi"] || [description isEqual:@"toggleBluetooth"]) {
+			colorLayersForConnectivity(glyph.layer.sublayers, [glyphColor CGColor]);
+			if (!isEnabled && [self respondsToSelector:@selector(alternateSelectedStateBackgroundView)]) {
+				UIView *alternateBackground = self.alternateSelectedStateBackgroundView;
+				[alternateBackground setAlpha:0];
+
+				if (!getBool(@"removeConnectivityBackground")) {
+					UIView *disabledBackground = self.normalStateBackgroundView;
+					[disabledBackground setAlpha:1];
+				}
+			}
+		} else {
+			colorLayers(glyph.layer.sublayers, [glyphColor CGColor]);
+		}
+
+		[activeBackground setBackgroundColor:activeBackgroundColor];
 	}
 
-	[activeBackground setBackgroundColor:activeBackgroundColor];
-}
-
+	%end
 %end
 
 %hook CCUIButtonModuleView
@@ -178,87 +180,90 @@ NSMutableDictionary *prefs, *defaultPrefs;
 }
 %end
 
-%hook MediaControlsTransportStackView
--(void)layoutSubviews {
-	%orig;
+%group MediaControls
+	%hook MediaControlsTransportStackView
+	-(void)layoutSubviews {
+		%orig;
 
-	MediaControlsTransportButton *leftButton = self.leftButton;
-	leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
+		MediaControlsTransportButton *leftButton = self.leftButton;
+		leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
 
-	MediaControlsTransportButton *middleButton = self.middleButton;
-	middleButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsMiddleButton")] CGColor];
+		MediaControlsTransportButton *middleButton = self.middleButton;
+		middleButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsMiddleButton")] CGColor];
 
-	MediaControlsTransportButton *rightButton = self.rightButton;
-	rightButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsRightButton")] CGColor];
-}
-%end
-
-%hook MediaControlsHeaderView
--(void)_updateStyle {
-	%orig;
-
-	UILabel *primaryLabel = self.primaryLabel;
-	primaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsPrimaryLabel")];
-
-	UILabel *secondaryLabel = self.secondaryLabel;
-	secondaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsSecondaryLabel")];
-}
-%end
-
-%hook CCUIModuleSliderView
--(void)didMoveToWindow {
-	%orig;
-
-	MTMaterialView *matView = MSHookIvar<MTMaterialView *>(self, "_continuousValueBackgroundView");
-	_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
-
-	UIViewController *controller = [self _viewControllerForAncestor];
-	NSString *sliderColor = nil;
-	NSString *glyphColor = nil;
-
-	if ([[controller description] containsString:@"Display"]) {
-		sliderColor = getValue(@"sliderBrightness");
-		glyphColor = getValue(@"sliderBrightnessGlyph");
-	} else if ([[controller description] containsString:@"Audio"]) {
-		sliderColor = getValue(@"sliderVolume");
-		glyphColor = getValue(@"sliderVolumeGlyph");
-	} else if ([[controller description] containsString:@"CCRinger"]) {
-		sliderColor = getValue(@"sliderCCRinger");
-		glyphColor = getValue(@"sliderCCRingerGlyph");
+		MediaControlsTransportButton *rightButton = self.rightButton;
+		rightButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsRightButton")] CGColor];
 	}
+	%end
 
-	if (sliderColor == nil || glyphColor == nil) return;
+	%hook MediaControlsHeaderView
+	-(void)_updateStyle {
+		%orig;
 
-	if (![sliderColor containsString:@":0.00"]) {
-		backdropView.brightness = 0;
-		backdropView.colorAddColor = [UIColor clearColor];
-		backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
-		colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
+		UILabel *primaryLabel = self.primaryLabel;
+		primaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsPrimaryLabel")];
+
+		UILabel *secondaryLabel = self.secondaryLabel;
+		secondaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsSecondaryLabel")];
 	}
-
-	CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
-	colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
-
-}
+	%end
 %end
 
-%hook CALayer
-// Force set opacity to 1 for the icons inside the sliders because iOS keeps resetting it to .15
--(void)setOpacity:(float)opacity {
-	if ([self.delegate isMemberOfClass:%c(CCUICAPackageView)]) {
-		id controller = [(CCUICAPackageView *)self.delegate _viewControllerForAncestor];
-		if ([controller isMemberOfClass:%c(CCUIDisplayModuleViewController)] ||
-			[controller isMemberOfClass:%c(CCUIAudioModuleViewController)] ||
-			[controller isMemberOfClass:%c(CCRingerModuleContentViewController)]) {
-			%orig(1);
+%group Sliders
+	%hook CCUIModuleSliderView
+	-(void)didMoveToWindow {
+		%orig;
+
+		MTMaterialView *matView = MSHookIvar<MTMaterialView *>(self, "_continuousValueBackgroundView");
+		_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
+
+		UIViewController *controller = [self _viewControllerForAncestor];
+		NSString *sliderColor = nil;
+		NSString *glyphColor = nil;
+
+		if ([[controller description] containsString:@"Display"]) {
+			sliderColor = getValue(@"sliderBrightness");
+			glyphColor = getValue(@"sliderBrightnessGlyph");
+		} else if ([[controller description] containsString:@"Audio"]) {
+			sliderColor = getValue(@"sliderVolume");
+			glyphColor = getValue(@"sliderVolumeGlyph");
+		} else if ([[controller description] containsString:@"CCRinger"]) {
+			sliderColor = getValue(@"sliderCCRinger");
+			glyphColor = getValue(@"sliderCCRingerGlyph");
+		}
+
+		if (sliderColor == nil || glyphColor == nil) return;
+
+		if (![sliderColor containsString:@":0.00"]) {
+			backdropView.brightness = 0;
+			backdropView.colorAddColor = [UIColor clearColor];
+			backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
+			colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
+		}
+
+		CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
+		colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+	}
+	%end
+
+	%hook CALayer
+	// Force set opacity to 1 for the icons inside the sliders because iOS keeps resetting it to .15
+	-(void)setOpacity:(float)opacity {
+		if ([self.delegate isMemberOfClass:%c(CCUICAPackageView)]) {
+			id controller = [(CCUICAPackageView *)self.delegate _viewControllerForAncestor];
+			if ([controller isMemberOfClass:%c(CCUIDisplayModuleViewController)] ||
+				[controller isMemberOfClass:%c(CCUIAudioModuleViewController)] ||
+				[controller isMemberOfClass:%c(CCRingerModuleContentViewController)]) {
+				%orig(1);
+			} else {
+				%orig;
+			}
+
 		} else {
 			%orig;
 		}
-
-	} else {
-		%orig;
 	}
-}
+	%end
 %end
 
 // Don't color transparent areas
@@ -375,6 +380,18 @@ static void initPrefs() {
 
 	if (getBool(@"enabled")) {
 		%init(_ungrouped);
+
+		if (getBool(@"enableConnectivity")) {
+			%init(Connectivity)
+		}
+		if (getBool(@"enableMediaControls")) {
+			%init(MediaControls)
+		}
+		if (getBool(@"enableSliders")) {
+			%init(Sliders)
+		}
 	}
+
+
 }
 
