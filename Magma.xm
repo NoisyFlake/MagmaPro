@@ -219,6 +219,8 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		sliderColor = getValue(@"sliderBrightness");
 	} else if ([[controller description] containsString:@"Audio"]) {
 		sliderColor = getValue(@"sliderVolume");
+	} else if ([[controller description] containsString:@"CCRinger"]) {
+		sliderColor = getValue(@"sliderCCRinger");
 	}
 
 	if (sliderColor == nil) return;

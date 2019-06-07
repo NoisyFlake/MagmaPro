@@ -123,9 +123,11 @@
 	<string>#FFFFFF:1.00</string>
 
 	<key>sliderBrightness</key>
-	<string>#000000:0.00</string>
+	<string>#FFFFFF:0.00</string>
 	<key>sliderVolume</key>
-	<string>#000000:0.00</string>
+	<string>#FFFFFF:0.00</string>
+	<key>sliderCCRinger</key>
+	<string>#FFFFFF:0.00</string>
 
 	<key>mediaControlsLeftButton</key>
 	<string>#FFFFFF:1.00</string>
