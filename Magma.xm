@@ -139,6 +139,10 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	}
 
 	NSString *selectedColor = isEnabled ? getValue(description) : getValue([NSString stringWithFormat:@"%@_inactive", description]);
+
+	if (isEnabled && ![getValue(@"enabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"enabledTogglesGlobal");
+	if (!isEnabled && ![getValue(@"disabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"disabledTogglesGlobal");
+
 	if (selectedColor == nil) return;
 
 	UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];

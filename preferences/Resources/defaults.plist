@@ -45,6 +45,8 @@
 	<key>removeToggleBackground</key>
 	<false/>
 
+	<key>enabledTogglesGlobal</key>
+	<string>#FFFFFF:0.00</string>
 	<key>CCUIOrientationLockModule</key>
 	<string>#FF5A63:1.00</string>
 	<key>DNDUIControlCenterModule</key>
@@ -80,6 +82,8 @@
 	<key>XBReduceWhiteModule</key>
 	<string>#78A3D4:1.00</string>
 
+	<key>disabledTogglesGlobal</key>
+	<string>#FFFFFF:0.00</string>
 	<key>CCUIOrientationLockModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
 	<key>DNDUIControlCenterModule_inactive</key>
