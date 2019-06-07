@@ -194,7 +194,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 %end
 
 %hook MediaControlsHeaderView
--(void)layoutSubviews {
+-(void)_updateStyle {
 	%orig;
 
 	UILabel *primaryLabel = self.primaryLabel;
