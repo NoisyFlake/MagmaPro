@@ -1,4 +1,5 @@
 @interface CCUICAPackageView : UIView
+-(id)_viewControllerForAncestor;
 @end
 
 @interface CCUIRoundButton : UIControl

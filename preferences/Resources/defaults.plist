@@ -128,6 +128,12 @@
 	<string>#FFFFFF:0.00</string>
 	<key>sliderCCRinger</key>
 	<string>#FFFFFF:0.00</string>
+	<key>sliderBrightnessGlyph</key>
+	<string>#FFFFFF:0.00</string>
+	<key>sliderVolumeGlyph</key>
+	<string>#FFFFFF:0.00</string>
+	<key>sliderCCRingerGlyph</key>
+	<string>#FFFFFF:0.00</string>
 
 	<key>mediaControlsLeftButton</key>
 	<string>#FFFFFF:1.00</string>

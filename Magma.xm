@@ -214,16 +214,20 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 	UIViewController *controller = [self _viewControllerForAncestor];
 	NSString *sliderColor = nil;
+	NSString *glyphColor = nil;
 
 	if ([[controller description] containsString:@"Display"]) {
 		sliderColor = getValue(@"sliderBrightness");
+		glyphColor = getValue(@"sliderBrightnessGlyph");
 	} else if ([[controller description] containsString:@"Audio"]) {
 		sliderColor = getValue(@"sliderVolume");
+		glyphColor = getValue(@"sliderVolumeGlyph");
 	} else if ([[controller description] containsString:@"CCRinger"]) {
 		sliderColor = getValue(@"sliderCCRinger");
+		glyphColor = getValue(@"sliderCCRingerGlyph");
 	}
 
-	if (sliderColor == nil) return;
+	if (sliderColor == nil || glyphColor == nil) return;
 
 	if (![sliderColor containsString:@":0.00"]) {
 		backdropView.brightness = 0;
@@ -232,6 +236,28 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
 	}
 
+	CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
+	colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+
+}
+%end
+
+%hook CALayer
+// Force set opacity to 1 for the icons inside the sliders because iOS keeps resetting it to .15
+-(void)setOpacity:(float)opacity {
+	if ([self.delegate isMemberOfClass:%c(CCUICAPackageView)]) {
+		id controller = [(CCUICAPackageView *)self.delegate _viewControllerForAncestor];
+		if ([controller isMemberOfClass:%c(CCUIDisplayModuleViewController)] ||
+			[controller isMemberOfClass:%c(CCUIAudioModuleViewController)] ||
+			[controller isMemberOfClass:%c(CCRingerModuleContentViewController)]) {
+			%orig(1);
+		} else {
+			%orig;
+		}
+
+	} else {
+		%orig;
+	}
 }
 %end
 

@@ -14,7 +14,16 @@
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
             <key>key</key>                      <string>sliderBrightness</string>
             <key>alpha</key>                    <true/>
-            <key>label</key>                    <string>Brightness</string>
+            <key>label</key>                    <string>Brightness Slider</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>sliderBrightnessGlyph</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Brightness Icon</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
         </dict>
         <dict>
@@ -23,7 +32,16 @@
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
             <key>key</key>                      <string>sliderVolume</string>
             <key>alpha</key>                    <true/>
-            <key>label</key>                    <string>Volume</string>
+            <key>label</key>                    <string>Volume Slider</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>sliderVolumeGlyph</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Volume Icon</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
         </dict>
         <dict>
@@ -36,7 +54,16 @@
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
             <key>key</key>                      <string>sliderCCRinger</string>
             <key>alpha</key>                    <true/>
-            <key>label</key>                    <string>CCRinger</string>
+            <key>label</key>                    <string>CCRinger Slider</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>sliderCCRingerGlyph</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>CCRinger Icon</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
         </dict>
         <dict>
