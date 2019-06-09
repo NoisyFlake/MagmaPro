@@ -11,7 +11,29 @@
 
 - (NSArray *)specifiers {
 	if (!_specifiers) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"DisabledToggles" target:self] retain];
+		_specifiers = [[self loadSpecifiersFromPlistName:@"EnabledToggles" target:self] retain];
+		NSMutableArray *mSpecifiers = [_specifiers mutableCopy];
+
+		// Load third-party toggles
+		NSFileManager *man = [NSFileManager defaultManager];
+		NSString *ccBundlesPath = @"/Library/ControlCenter/Bundles/";
+		NSArray* bundles = [man contentsOfDirectoryAtPath:ccBundlesPath error:NULL];
+		bundles = [bundles sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+		for (NSString *module in bundles) {
+			NSString *plist = [NSString stringWithFormat:@"%@%@/Info.plist", ccBundlesPath, module];
+			if ([module containsString:@"FlipConvert"]) continue;
+
+			if ([man fileExistsAtPath:plist]) {
+				NSDictionary *info = [NSDictionary dictionaryWithContentsOfFile: plist];
+				if (![[info objectForKey: @"NSPrincipalClass"] isEqual:@"CCUIAppLauncherModule"]) {
+					NSString *displayName = [info objectForKey:@"CFBundleDisplayName"] != nil ? [info objectForKey:@"CFBundleDisplayName"] : [info objectForKey:@"CFBundleName"];
+					[mSpecifiers addObject:[self generateSpecifier:[NSString stringWithFormat:@"%@_inactive", [info objectForKey:@"NSPrincipalClass"]] displayName:displayName]];
+				}
+
+			}
+		}
+
+		_specifiers = mSpecifiers;
 	}
 
 	return _specifiers;
@@ -32,6 +54,22 @@
 	if (notificationName) {
 		CFNotificationCenterPostNotification(CFNotificationCenterGetDarwinNotifyCenter(), notificationName, NULL, NULL, YES);
 	}
+}
+
+- (PSSpecifier*)generateSpecifier:(NSString *)key displayName:(NSString *)displayName {
+	PSSpecifier* specifier = [PSSpecifier preferenceSpecifierNamed:displayName
+									    target:self
+									    set:@selector(setPreferenceValue:specifier:)
+									    get:@selector(readPreferenceValue:)
+									    detail:Nil
+									    cell:PSLinkCell
+									    edit:Nil];
+
+	[specifier setProperty:@YES forKey:@"alpha"];
+	[specifier setProperty:key forKey:@"key"];
+	[specifier setProperty:@"com.noisyflake.magmapro" forKey:@"defaults"];
+	[specifier setProperty:NSClassFromString(@"MagmaColorPickerCell") forKey:@"cellClass"];
+	return specifier;
 }
 
 @end

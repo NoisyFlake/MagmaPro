@@ -40,7 +40,12 @@
 }
 
 -(void)displayAlert {
-    UIColor *startColor = [UIColor RGBAColorFromHexString:[self previewColor]];
+    NSString *color = [self previewColor];
+    if ([color isEqual:@"Default"]) {
+        color = @"#FFFFFF:1.00";
+    }
+
+    UIColor *startColor = [UIColor RGBAColorFromHexString:color];
     BOOL alpha = [[self.specifier propertyForKey:@"alpha"] boolValue];
 
     PFColorAlert *alert = [PFColorAlert colorAlertWithStartColor:startColor showAlpha:alpha];
@@ -83,13 +88,20 @@
         color = [_defaultPrefs valueForKey:[self.specifier propertyForKey:@"key"]];
     }
 
-    if (color == nil) color = @"#FFFFFF:1.00";
+    if (color == nil) color = @"Default";
 
     return color;
 }
 
 -(void)updateCellDisplay {
     NSString *color = [self previewColor];
+
+    if ([color isEqual:@"Default"]) {
+        _colorPreview.backgroundColor = [UIColor whiteColor];
+        self.detailTextLabel.text = @"Default";
+        self.detailTextLabel.alpha = 0.65;
+        return;
+    }
 
     _colorPreview.backgroundColor = [UIColor RGBAColorFromHexString:color];
     NSUInteger location = [color rangeOfString:@":"].location;
@@ -103,6 +115,7 @@
             color = [NSString stringWithFormat:@"%@ %d%%", color, (int)alpha];
         }
     }
+
     self.detailTextLabel.text = color;
     self.detailTextLabel.alpha = 0.65;
 }

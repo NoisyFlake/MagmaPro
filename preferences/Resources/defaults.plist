@@ -61,10 +61,11 @@
 	<string>#007AFF:1.00</string>
 	<key>MPAVAirPlayMirroringMenuModuleViewController</key>
 	<string>#007AFF:1.00</string>
-	<key>LocationModule</key>
-	<string>#003EFF:1.00</string>
 	<key>MTCCTimerViewController</key>
 	<string>#FF9500:1.00</string>
+
+<!-- 	<key>LocationModule</key>
+	<string>#003EFF:1.00</string>
 	<key>CCUIMuteModule</key>
 	<string>#FF0000:1.00</string>
 	<key>CCVPNModule</key>
@@ -80,7 +81,7 @@
 	<key>CCVibrationModule</key>
 	<string>#FF0000:1.00</string>
 	<key>XBReduceWhiteModule</key>
-	<string>#78A3D4:1.00</string>
+	<string>#78A3D4:1.00</string> -->
 
 	<key>disabledTogglesGlobal</key>
 	<string>#FFFFFF:0.00</string>
@@ -98,9 +99,10 @@
 	<string>#FFFFFF:1.00</string>
 	<key>MPAVAirPlayMirroringMenuModuleViewController_inactive</key>
 	<string>#FFFFFF:1.00</string>
-	<key>LocationModule_inactive</key>
-	<string>#FFFFFF:1.00</string>
 	<key>MTCCTimerViewController_inactive</key>
+	<string>#FFFFFF:1.00</string>
+
+	<!-- <key>LocationModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
 	<key>CCUIMuteModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
@@ -127,7 +129,7 @@
 	<key>SafeModeModule_inactive</key>
 	<string>#FFFFFF:1.00</string>
 	<key>UICacheModule_inactive</key>
-	<string>#FFFFFF:1.00</string>
+	<string>#FFFFFF:1.00</string> -->
 
 	<key>enableSliders</key>
 	<true/>
