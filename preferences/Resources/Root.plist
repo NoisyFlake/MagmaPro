@@ -70,31 +70,9 @@
         </dict>
         <dict>
             <key>cell</key>                     <string>PSLinkCell</string>
-            <key>label</key>                    <string>Application Launchers</string>
-            <key>bundle</key>                   <string>AppList</string>
             <key>isController</key>             <true/>
-            <key>ALAllowsSelection</key>        <true/>
-            <key>ALSectionDescriptors</key>     <array>
-                <dict>
-                    <key>cell</key>                     <string>PSLinkCell</string>
-                    <key>predicate</key>                <string>isSystemApplication = FALSE OR isSystemApplication = YES</string>
-                    <key>suppress-hidden-apps</key>     <true/>
-                    <key>cell-class-name</key>          <string>ALDisclosureIndicatedCell</string>
-                    <key>icon-size</key>                <integer>29</integer>
-                    <key>action</key>                   <string>showPreferences</string>
-                    <key>display-identifier-macro</key> <string>@@DISPLAYIDENTIFIER@@</string>
-                    <key>entry</key>
-                    <dict>
-                        <key>cell</key>                     <string>PSLinkCell</string>
-                        <key>key</key>                      <string>AppColor-@@DISPLAYIDENTIFIER@@"</string>
-                        <key>bundle</key>                   <string>AppList</string>
-                        <key>detail</key>                   <string>MagmaAppLaunchers</string>
-                        <key>label</key>                    <string>@@DISPLAYIDENTIFIER@@</string>
-                        <key>isController</key>             <true/>
-                        <key>overridePrincipalClass</key>   <true/>
-                    </dict>
-                </dict>
-            </array>
+            <key>detail</key>                   <string>MagmaAppList</string>
+            <key>label</key>                    <string>App Launchers</string>
         </dict>
         <dict>
             <key>cell</key>                     <string>PSLinkCell</string>

@@ -156,5 +156,10 @@
 	<string>#FFFFFF:1.00</string>
 	<key>mediaControlsSecondaryLabel</key>
 	<string>#FFFFFF:1.00</string>
+
+	<key>enableAppLaunchers</key>
+	<true/>
+	<key>appLaunchersGlobal</key>
+	<string>#FFFFFF:0.00</string>
 </dict>
 </plist>

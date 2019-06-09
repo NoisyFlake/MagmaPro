@@ -80,25 +80,30 @@ NSMutableDictionary *prefs, *defaultPrefs;
 %end
 
 %hook CCUIButtonModuleView
--(void)didMoveToWindow {
-	%orig;
+%group AppLaunchers
+	-(void)didMoveToWindow {
+		%orig;
 
-	// App Shortcuts need to be only colored once and have no state
-	UIViewController *controller = [self _viewControllerForAncestor];
-	if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
-		CCUIAppLauncherModule *module = ((CCUIAppLauncherViewController *)controller).module;
-		NSString *description = module.applicationIdentifier;
 
-		NSString *selectedColor = getValue(description);
-		if (selectedColor == nil) return;
+		// App Shortcuts need to be only colored once and have no state
+		UIViewController *controller = [self _viewControllerForAncestor];
+		if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
+			CCUIAppLauncherModule *module = ((CCUIAppLauncherViewController *)controller).module;
+			NSString *description = module.applicationIdentifier;
 
-		UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
-		colorLayers(self.layer.sublayers, [glyphColor CGColor]);
-	} else if ([[controller description] containsString:@"Flashlight"]) {
-		// Fix for the initial color of the flashlight after a respring
-		[self colorButton];
+			NSString *selectedColor = getValue(description);
+			if (![getValue(@"appLaunchersGlobal") containsString:@":0.00"]) selectedColor = getValue(@"appLaunchersGlobal");
+
+			if (selectedColor == nil) return;
+
+			UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
+			colorLayers(self.layer.sublayers, [glyphColor CGColor]);
+		} else if ([[controller description] containsString:@"Flashlight"]) {
+			// Fix for the initial color of the flashlight after a respring
+			[self colorButton];
+		}
 	}
-}
+%end
 
 -(void)setGlyphState:(NSString *)arg1 {
 	%orig;
@@ -393,6 +398,9 @@ static void initPrefs() {
 		}
 		if (getBool(@"enableSliders")) {
 			%init(Sliders)
+		}
+		if (getBool(@"enableAppLaunchers")) {
+			%init(AppLaunchers)
 		}
 	}
 
