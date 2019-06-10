@@ -21,7 +21,11 @@
 		bundles = [bundles sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 		for (NSString *module in bundles) {
 			NSString *plist = [NSString stringWithFormat:@"%@%@/Info.plist", ccBundlesPath, module];
-			if ([module containsString:@"FlipConvert"]) continue;
+			if ([module containsString:@"FlipConvert"] ||
+				[module isEqual:@"LowPowerModule.bundle"] ||
+				[module containsString:@"BCIXWeather"] ||
+				[module isEqual:@"CCRingerModule.bundle"] ||
+				[module isEqual:@"PowerModule.bundle"]) continue;
 
 			if ([man fileExistsAtPath:plist]) {
 				NSDictionary *info = [NSDictionary dictionaryWithContentsOfFile: plist];
@@ -32,6 +36,11 @@
 
 			}
 		}
+
+		PSSpecifier *footer = [PSSpecifier preferenceSpecifierNamed:@"" target:self set:nil get:nil detail:Nil cell:PSGroupCell edit:Nil];
+		[footer setProperty:@"Attention: This list is generated automatically, so not all modules might be supported" forKey:@"footerText"];
+		[footer setProperty:@"1" forKey:@"footerAlignment"];
+		[mSpecifiers addObject:footer];
 
 		_specifiers = mSpecifiers;
 	}

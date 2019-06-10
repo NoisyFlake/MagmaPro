@@ -84,7 +84,6 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	-(void)didMoveToWindow {
 		%orig;
 
-
 		// App Shortcuts need to be only colored once and have no state
 		UIViewController *controller = [self _viewControllerForAncestor];
 		if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
@@ -98,12 +97,14 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 			UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
 			colorLayers(self.layer.sublayers, [glyphColor CGColor]);
-		} else if ([[controller description] containsString:@"Flashlight"]) {
-			// Fix for the initial color of the flashlight after a respring
-			[self colorButton];
 		}
 	}
 %end
+
+-(void)didMoveToWindow {
+	%orig;
+	[self colorButton];
+}
 
 -(void)setGlyphState:(NSString *)arg1 {
 	%orig;
@@ -112,13 +113,7 @@ NSMutableDictionary *prefs, *defaultPrefs;
 
 -(void)_updateForStateChange {
 	%orig;
-
-	// Workaround for modules that don't respond to setGlyphState
-	UIViewController *controller = [self _viewControllerForAncestor];
-	NSString *description = [controller description];
-	if ([description containsString:@"Flashlight"] || [description containsString:@"RPControlCenter"]) {
-		[self colorButton];
-	}
+	[self colorButton];
 }
 
 %new
@@ -194,14 +189,21 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	-(void)layoutSubviews {
 		%orig;
 
-		MediaControlsTransportButton *leftButton = self.leftButton;
-		leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
+		if (getValue(@"mediaControlsLeftButton") != nil) {
+			MediaControlsTransportButton *leftButton = self.leftButton;
+			leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
+		}
 
-		MediaControlsTransportButton *middleButton = self.middleButton;
-		middleButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsMiddleButton")] CGColor];
+		if (getValue(@"mediaControlsMiddleButton") != nil) {
+			MediaControlsTransportButton *middleButton = self.middleButton;
+			middleButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsMiddleButton")] CGColor];
+		}
 
-		MediaControlsTransportButton *rightButton = self.rightButton;
-		rightButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsRightButton")] CGColor];
+		if (getValue(@"mediaControlsRightButton") != nil) {
+			MediaControlsTransportButton *rightButton = self.rightButton;
+			rightButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsRightButton")] CGColor];
+		}
+
 	}
 	%end
 
@@ -209,11 +211,16 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	-(void)_updateStyle {
 		%orig;
 
-		UILabel *primaryLabel = self.primaryLabel;
-		primaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsPrimaryLabel")];
+		if (getValue(@"mediaControlsPrimaryLabel") != nil) {
+			UILabel *primaryLabel = self.primaryLabel;
+			primaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsPrimaryLabel")];
+		}
 
-		UILabel *secondaryLabel = self.secondaryLabel;
-		secondaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsSecondaryLabel")];
+		if (getValue(@"mediaControlsSecondaryLabel") != nil) {
+			UILabel *secondaryLabel = self.secondaryLabel;
+			secondaryLabel.textColor = [UIColor RGBAColorFromHexString:getValue(@"mediaControlsSecondaryLabel")];
+		}
+
 	}
 	%end
 %end
@@ -241,17 +248,18 @@ NSMutableDictionary *prefs, *defaultPrefs;
 			glyphColor = getValue(@"sliderCCRingerGlyph");
 		}
 
-		if (sliderColor == nil || glyphColor == nil) return;
-
-		if (![sliderColor containsString:@":0.00"]) {
+		if (sliderColor != nil && ![sliderColor containsString:@":0.00"]) {
 			backdropView.brightness = 0;
 			backdropView.colorAddColor = [UIColor clearColor];
 			backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
 			colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
 		}
 
-		CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
-		colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+		if (glyphColor != nil) {
+			CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
+			colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+		}
+
 	}
 	%end
 

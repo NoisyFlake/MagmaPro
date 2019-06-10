@@ -8,11 +8,12 @@
 			<key>cell</key>						<string>PSGroupCell</string>
 			<key>footerCellClass</key>			<string>MagmaLogo</string>
  		</dict>
-
- 		<dict>
+        <dict>
             <key>cell</key>                     <string>PSGroupCell</string>
-            <key>footerText</key>               <string>Changing this option requires a respring</string>
+            <key>footerText</key>               <string>Changing any option requires a respring</string>
+            <key>footerAlignment</key>          <string>1</string>
         </dict>
+
 		<dict>
 			<key>cell</key>						<string>PSSwitchCell</string>
 			<key>default</key>					<true/>
@@ -49,7 +50,7 @@
 
         <dict>
             <key>cell</key>                     <string>PSGroupCell</string>
-            <key>label</key>                    <string>Other Toggles</string>
+            <key>label</key>                    <string>Other Modules</string>
         </dict>
         <dict>
             <key>cell</key>                     <string>PSLinkCell</string>
@@ -102,8 +103,6 @@
 			<key>footerText</key> 				<string>Developed with ♥ by NoisyFlake</string>
 			<key>footerAlignment</key> 			<string>1</string>
 		</dict>
-
-
 	</array>
 
 	<key>title</key>

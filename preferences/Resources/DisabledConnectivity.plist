@@ -71,11 +71,6 @@
             <key>label</key>                    <string>WiFi</string>
             <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
         </dict>
-        <dict>
-            <key>cell</key>                     <string>PSGroupCell</string>
-            <key>footerText</key>               <string>Changing these options requires a respring</string>
-            <key>footerAlignment</key>          <string>1</string>
-        </dict>
     </array>
 
     <key>title</key>

@@ -2,7 +2,7 @@ Package: com.noisyflake.magmapro
 Name: Magma Pro
 Depends: mobilesubstrate, firmware (>= 11.0), me.nepeta.libcolorpicker
 Conflicts: com.noisyflake.magma
-Version: 1.0.2
+Version: 1.1.0
 Architecture: iphoneos-arm
 Description: Colorize your Control Center
 Maintainer: NoisyFlake
