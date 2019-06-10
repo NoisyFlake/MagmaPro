@@ -76,11 +76,6 @@
 			}
 		}
 
-		PSSpecifier *footer = [PSSpecifier preferenceSpecifierNamed:@"" target:self set:nil get:nil detail:Nil cell:PSGroupCell edit:Nil];
-		[footer setProperty:@"Changing these options requires a respring" forKey:@"footerText"];
-		[footer setProperty:@"1" forKey:@"footerAlignment"];
-		[appSpecifiers addObject:footer];
-
 		_specifiers = appSpecifiers;
 
 	}
