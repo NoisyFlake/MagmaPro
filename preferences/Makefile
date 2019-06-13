@@ -7,7 +7,7 @@ $(BUNDLE_NAME)_FILES = ../include/UIColor.m MagmaPrefs.m MagmaColorPickerCell.m 
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS = CoreGraphics UIKit
 $(BUNDLE_NAME)_PRIVATE_FRAMEWORKS = Preferences
-$(BUNDLE_NAME)_LIBRARIES = colorpicker applist
+$(BUNDLE_NAME)_LIBRARIES = colorpicker
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 
