@@ -53,6 +53,10 @@
 			}
 		}
 
+		// Add fake entries for Music and Weather because we don't get them for some unknown reason here
+		[installedSystemAppIdentifiers setObject:[NSNumber numberWithInt:236] forKey:@"com.apple.Music"];
+		[installedSystemAppIdentifiers setObject:[NSNumber numberWithInt:237] forKey:@"com.apple.weather"];
+
 		// Load supported third-party bundles
 		NSString *ccBundlesPath = @"/Library/ControlCenter/Bundles/";
 		NSArray* bundles = [man contentsOfDirectoryAtPath:ccBundlesPath error:NULL];
@@ -65,7 +69,6 @@
 
 					NSBundle *bundle = [NSBundle bundleWithIdentifier:[info objectForKey:@"CCAssociatedBundleIdentifier"]];
 					if (bundle == nil) {
-
 						bundle = [installedSystemAppIdentifiers objectForKey:[info objectForKey:@"CCAssociatedBundleIdentifier"]];
 						if (bundle == nil) continue;
 					}

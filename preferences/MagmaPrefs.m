@@ -44,6 +44,57 @@
 	posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char* const*)args, NULL);
 }
 
+-(void)exportSettings {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	UIAlertController *alert;
+
+	if (![fileManager fileExistsAtPath:@"/User/Library/Preferences/com.noisyflake.magmapro.plist"]) {
+		alert = [UIAlertController alertControllerWithTitle:@"Export failed" message:@"Something went wrong, you don't seem to have a settings file." preferredStyle:UIAlertControllerStyleAlert];
+	} else {
+		NSString *settings = [NSString stringWithContentsOfFile:@"/User/Library/Preferences/com.noisyflake.magmapro.plist" encoding:NSUTF8StringEncoding error:nil];
+		settings = [NSString stringWithFormat:@"MagmaPro:%@", settings];
+
+	    NSData *plainData = [settings dataUsingEncoding:NSUTF8StringEncoding];
+	    NSString *base64String = [plainData base64EncodedStringWithOptions:0];
+
+	    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+		pasteboard.string = base64String;
+
+		alert = [UIAlertController alertControllerWithTitle:@"Export successful" message:@"Your unique settings string has been copied to the clipboard. Share it with someone or save it somewhere so you can restore your settings later." preferredStyle:UIAlertControllerStyleAlert];
+	}
+
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+-(void)importSettings {
+	UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+
+	NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:pasteboard.string options:0];
+	NSString *settings = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+
+	UIAlertController *alert;
+	UIAlertAction *action;
+
+	if ([settings length] <= 0 || ![settings hasPrefix:@"MagmaPro:"]) {
+		alert = [UIAlertController alertControllerWithTitle:@"Import failed" message:@"Your settings string is invalid. Please make sure that you have a valid Magma Pro settings string in your clipboard." preferredStyle:UIAlertControllerStyleAlert];
+		action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+	} else {
+		settings = [settings substringFromIndex:9];
+		[settings writeToFile:@"/User/Library/Preferences/com.noisyflake.magmapro.plist" atomically:YES encoding:NSStringEncodingConversionAllowLossy error:nil];
+
+		alert = [UIAlertController alertControllerWithTitle:@"Import successful" message:@"Your settings have been updated. Your device will now perform a respring." preferredStyle:UIAlertControllerStyleAlert];
+		action = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+			[self respring];
+		}];
+	}
+
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 -(void)resetSettings {
 	UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Warning!" message:@"Do you want to reset all settings to their default values?" preferredStyle:UIAlertControllerStyleAlert];
     UIAlertAction *yesAction = [UIAlertAction actionWithTitle:@"Yes" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {

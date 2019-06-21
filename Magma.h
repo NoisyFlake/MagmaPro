@@ -18,6 +18,10 @@
 -(id)_viewControllerForAncestor;
 @end
 
+@interface CCUIContentModuleContainerView : UIView
+@property (nonatomic,copy,readonly) NSString * moduleIdentifier;
+@end
+
 @interface CCUIToggleModule : NSObject
 @end
 

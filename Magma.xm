@@ -131,6 +131,9 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	if(location == NSNotFound) return;
 	description = [description substringWithRange:NSMakeRange(1, location - 1)];
 
+	// Fix for iOS 11 DND toggle
+	if ([description isEqual:@"CCUIDoNotDisturbModule"]) description = @"DNDUIControlCenterModule";
+
 	bool isEnabled;
 	for (MTMaterialView* matView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
 		if ([matView isMemberOfClass:%c(MTMaterialView)]) {
@@ -181,6 +184,24 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		}
 	}
 
+}
+%end
+
+// Coloring for the Home Button because it is completely different from all other buttons
+%hook CCUIContentModuleContainerView
+-(void)layoutSubviews {
+	%orig;
+	if ([self.moduleIdentifier isEqual:@"com.apple.Home.ControlCenter"]) {
+		NSString *selectedColor = getValue(@"AppleHomeModule_inactive");
+		if (selectedColor == nil) return;
+
+		for (UIView* homeButton in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
+			if ([homeButton isMemberOfClass:%c(HUCCHomeButton)]) {
+				colorLayers(homeButton.layer.sublayers, [[UIColor RGBAColorFromHexString:selectedColor] CGColor]);
+			}
+		}
+
+	}
 }
 %end
 
@@ -316,11 +337,8 @@ static void colorLayers(NSArray *layers, CGColorRef color) {
 				sublayer.borderColor = color;
 			}
 
-			CGColorRef contentColor = sublayer.contentsMultiplyColor;
-			if (!isNotAColor(contentColor)) {
-				sublayer.contentsMultiplyColor = color;
-			}
-
+			// Always color contentsMultiplyColor because it won't be transparent (and it has no effect if there is no content)
+			sublayer.contentsMultiplyColor = color;
 		}
 
 		colorLayers(sublayer.sublayers, color);

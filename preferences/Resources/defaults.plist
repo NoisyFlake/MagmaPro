@@ -66,6 +66,8 @@
 
 	<key>disabledTogglesGlobal</key>
 	<string>#FFFFFF:0.00</string>
+	<key>AppleHomeModule_inactive</key>
+	<string>#FFFFFF:1.00</string>
 	<key>AXCCShortcutModuleViewController_inactive</key>
 	<string>#FFFFFF:1.00</string>
 	<key>AXCCGuidedAccessModuleViewController_inactive</key>

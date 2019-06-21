@@ -92,6 +92,16 @@
 			<key>cell</key> 					<string>PSGroupCell</string>
 			<key>label</key> 					<string>Advanced</string>
 		</dict>
+        <dict>
+            <key>cell</key>                     <string>PSButtonCell</string>
+            <key>action</key>                   <string>importSettings</string>
+            <key>label</key>                    <string>Import Settings</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSButtonCell</string>
+            <key>action</key>                   <string>exportSettings</string>
+            <key>label</key>                    <string>Export Settings</string>
+        </dict>
 		<dict>
 			<key>cell</key> 					<string>PSButtonCell</string>
 			<key>action</key> 					<string>resetSettings</string>
