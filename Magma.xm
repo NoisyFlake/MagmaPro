@@ -205,6 +205,16 @@ NSMutableDictionary *prefs, *defaultPrefs;
 }
 %end
 
+%hook CCUIModularControlCenterOverlayViewController
+-(void)presentAnimated:(BOOL)arg1 withCompletionHandler:(id)arg2 {
+	%orig;
+
+	NSString *selectedColor = getValue(@"mainBackground");
+	if (selectedColor == nil) return;
+	self.overlayBackgroundView.backgroundColor = [UIColor RGBAColorFromHexString:selectedColor];
+}
+%end
+
 %group MediaControls
 	%hook MediaControlsTransportStackView
 	-(void)layoutSubviews {

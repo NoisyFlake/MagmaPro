@@ -11,6 +11,9 @@
 	<key>invertConnectivity</key>
 	<true/>
 
+	<key>mainBackground</key>
+	<string>#FFFFFF:0.00</string>
+
 	<key>toggleAirDrop</key>
 	<string>#007AFF:1.00</string>
 	<key>toggleAirplaneMode</key>

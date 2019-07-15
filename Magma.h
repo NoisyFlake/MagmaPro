@@ -83,6 +83,10 @@
 @property (nonatomic,retain) UILabel * primaryLabel;
 @property (nonatomic,retain) UILabel * secondaryLabel;
 @end
+
+@interface CCUIModularControlCenterOverlayViewController
+@property (nonatomic,readonly) MTMaterialView * overlayBackgroundView;
+@end
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
 static void colorLabel(UILabel *label, UIColor *color);
