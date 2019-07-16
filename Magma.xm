@@ -212,6 +212,13 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	NSString *selectedColor = getValue(@"mainBackground");
 	if (selectedColor == nil) return;
 	self.overlayBackgroundView.backgroundColor = [UIColor RGBAColorFromHexString:selectedColor];
+
+	if ([selectedColor containsString:@":1.00"]) {
+		_MTBackdropView *backdropView = MSHookIvar<_MTBackdropView *>(self.overlayBackgroundView, "_backdropView");
+		backdropView.luminanceAlpha = 0;
+	}
+
+
 }
 %end
 

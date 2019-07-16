@@ -61,6 +61,7 @@
 @interface _MTBackdropView : UIView
 @property (assign,nonatomic) double brightness;
 @property (nonatomic,copy) UIColor * colorAddColor;
+@property (assign,nonatomic) double luminanceAlpha;
 @end
 
 @interface MPButton : UIButton
