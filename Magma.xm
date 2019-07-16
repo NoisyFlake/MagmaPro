@@ -163,23 +163,27 @@ NSMutableDictionary *prefs, *defaultPrefs;
 	colorLayers(self.layer.sublayers, [glyphColor CGColor]);
 
 	// Color labels (e.g. for AirPlay)
-	for (UIView* subview in controller.view.allSubviews) {
-		if ([subview isMemberOfClass:%c(UILabel)]) {
-			colorLabel((UILabel *)subview, glyphColor);
+	if ([controller.view respondsToSelector:@selector(allSubviews)] || [controller.view respondsToSelector:@selector(subviews)]) {
+		for (UIView* subview in ([controller.view respondsToSelector:@selector(allSubviews)] ? [controller.view allSubviews] : [controller.view subviews])) {
+			if ([subview isMemberOfClass:%c(UILabel)]) {
+				colorLabel((UILabel *)subview, glyphColor);
+			}
 		}
 	}
 
 	if (!isEnabled) return;
 
 	// Color BackdropView (which is only visible on active toggles)
-	for (_MTBackdropView* backdropView in self.allSubviews) {
-		if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
-			if (getBool(@"removeToggleBackground")) {
-				backdropView.alpha = 0;
-			} else {
-				backdropView.backgroundColor = backgroundColor;
-				backdropView.brightness = bgBrightness;
-				backdropView.colorAddColor = bgColorAddColor;
+	if ([self respondsToSelector:@selector(allSubviews)] || [self respondsToSelector:@selector(subviews)]) {
+		for (_MTBackdropView* backdropView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
+			if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
+				if (getBool(@"removeToggleBackground")) {
+					backdropView.alpha = 0;
+				} else {
+					backdropView.backgroundColor = backgroundColor;
+					backdropView.brightness = bgBrightness;
+					backdropView.colorAddColor = bgColorAddColor;
+				}
 			}
 		}
 	}
