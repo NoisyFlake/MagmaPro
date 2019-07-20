@@ -89,6 +89,13 @@
         </dict>
         <dict>
             <key>cell</key>                     <string>PSLinkCell</string>
+            <key>id</key>                       <string>PowerModuleSpec</string>
+            <key>isController</key>             <true/>
+            <key>detail</key>                   <string>MagmaPowerModule</string>
+            <key>label</key>                    <string>Power Module</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
             <key>cellClass</key>                <string>MagmaColorPickerCell</string>
             <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
             <key>key</key>                      <string>mainBackground</string>

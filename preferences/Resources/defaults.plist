@@ -106,5 +106,23 @@
 	<true/>
 	<key>appLaunchersGlobal</key>
 	<string>#FFFFFF:0.00</string>
+
+	<key>enablePowerModule</key>
+	<true/>
+	<key>removePowerModuleBackground</key>
+	<false/>
+	<key>pwrModRespring</key>
+	<string>#FFFFFF:1.00</string>
+	<key>pwrModUICache</key>
+	<string>#FFFFFF:1.00</string>
+	<key>pwrModSafemode</key>
+	<string>#FFFFFF:1.00</string>
+	<key>pwrModReboot</key>
+	<string>#FFFFFF:1.00</string>
+	<key>pwrModPowerDown</key>
+	<string>#FFFFFF:1.00</string>
+	<key>pwrModLock</key>
+	<string>#FFFFFF:1.00</string>
+
 </dict>
 </plist>

@@ -10,6 +10,7 @@
 @property (nonatomic,retain) UIImageView * glyphImageView;
 -(id)_viewControllerForAncestor;
 -(void)colorButton;
+-(void)magmaColorPowerModule;
 @end
 
 @interface CCUIButtonModuleView : UIControl

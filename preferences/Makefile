@@ -3,7 +3,7 @@ ARCHS = arm64 arm64e
 include $(THEOS)/makefiles/common.mk
 
 BUNDLE_NAME = MagmaProPrefs
-$(BUNDLE_NAME)_FILES = ../include/UIColor.m MagmaPrefs.m MagmaColorPickerCell.m MagmaEnabledToggles.m MagmaDisabledToggles.m MagmaMediaControls.m MagmaSliders.m MagmaEnabledConnectivity.m MagmaDisabledConnectivity.m MagmaAppList.m
+$(BUNDLE_NAME)_FILES = ../include/UIColor.m MagmaPrefs.m MagmaColorPickerCell.m MagmaEnabledToggles.m MagmaDisabledToggles.m MagmaMediaControls.m MagmaSliders.m MagmaEnabledConnectivity.m MagmaDisabledConnectivity.m MagmaAppList.m MagmaPowerModule.m
 $(BUNDLE_NAME)_INSTALL_PATH = /Library/PreferenceBundles
 $(BUNDLE_NAME)_FRAMEWORKS = CoreGraphics UIKit
 $(BUNDLE_NAME)_PRIVATE_FRAMEWORKS = Preferences

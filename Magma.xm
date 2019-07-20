@@ -2,6 +2,7 @@
 #import "include/UIColor.h"
 
 NSMutableDictionary *prefs, *defaultPrefs;
+BOOL powerModuleInstalled;
 
 %group Connectivity
 	%hook CCUIRoundButton
@@ -76,6 +77,58 @@ NSMutableDictionary *prefs, *defaultPrefs;
 		[activeBackground setBackgroundColor:activeBackgroundColor];
 	}
 
+	%end
+%end
+
+%group PowerModule
+	%hook CCUIRoundButton
+		-(void)didMoveToWindow {
+			%orig;
+			[self magmaColorPowerModule];
+		}
+
+		-(void)_updateForStateChange {
+			%orig;
+			[self magmaColorPowerModule];
+		}
+
+		-(void)layoutSubviews {
+			%orig;
+			[self magmaColorPowerModule];
+		}
+
+		%new
+		-(void)magmaColorPowerModule {
+			UIViewController *controller = [self _viewControllerForAncestor];
+			UIView *glyph = self.glyphPackageView == nil ? self : self.glyphPackageView;
+
+			NSString *description = nil;
+			if ([controller isMemberOfClass:%c(RespringButtonController)]) {
+				description = @"pwrModRespring";
+			} else if ([controller isMemberOfClass:%c(UICacheButtonController)]) {
+				description = @"pwrModUICache";
+			} else if ([controller isMemberOfClass:%c(SafemodeButtonController)]) {
+				description = @"pwrModSafemode";
+			} else if ([controller isMemberOfClass:%c(RebootButtonController)]) {
+				description = @"pwrModReboot";
+			} else if ([controller isMemberOfClass:%c(PowerDownButtonController)]) {
+				description = @"pwrModPowerDown";
+			} else if ([controller isMemberOfClass:%c(LockButtonController)]) {
+				description = @"pwrModLock";
+			}
+
+			NSString *selectedColor = getValue(description);
+			if (selectedColor == nil) return;
+
+			UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
+
+			if(getBool(@"removePowerModuleBackground")) {
+				UIView *disabledBackground = self.normalStateBackgroundView;
+				[disabledBackground setAlpha:0];
+			}
+
+			colorLayers(glyph.layer.sublayers, [glyphColor CGColor]);
+		}
 	%end
 %end
 
@@ -427,6 +480,8 @@ static void initPrefs() {
 	}
 
 	defaultPrefs = [[NSMutableDictionary alloc] initWithContentsOfFile:pathDefault];
+
+	powerModuleInstalled = [fileManager fileExistsAtPath:@"/Library/ControlCenter/Bundles/PowerModule.bundle"];
 }
 
 %ctor {
@@ -448,6 +503,10 @@ static void initPrefs() {
 		}
 		if (getBool(@"enableAppLaunchers")) {
 			%init(AppLaunchers)
+		}
+
+		if (powerModuleInstalled && getBool(@"enablePowerModule")) {
+			%init(PowerModule);
 		}
 	}
 

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>items</key>
+    <array>
+        <dict>
+            <key>cell</key>                     <string>PSSwitchCell</string>
+            <key>default</key>                  <true/>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>enablePowerModule</string>
+            <key>label</key>                    <string>Enable</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSSwitchCell</string>
+            <key>default</key>                  <false/>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>removePowerModuleBackground</string>
+            <key>label</key>                    <string>Remove Background</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+
+        <dict>
+            <key>cell</key>                     <string>PSGroupCell</string>
+            <key>label</key>                    <string>Button Colors</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModRespring</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Respring</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModUICache</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>UICache</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModSafemode</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Safemode</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModReboot</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Reboot</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModPowerDown</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Power Down</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+        <dict>
+            <key>cell</key>                     <string>PSLinkCell</string>
+            <key>cellClass</key>                <string>MagmaColorPickerCell</string>
+            <key>defaults</key>                 <string>com.noisyflake.magmapro</string>
+            <key>key</key>                      <string>pwrModLock</string>
+            <key>alpha</key>                    <true/>
+            <key>label</key>                    <string>Lock Screen</string>
+            <key>PostNotification</key>         <string>com.noisyflake.magmapro/prefsupdated</string>
+        </dict>
+    </array>
+
+    <key>title</key>
+    <string>Power Module</string>
+</dict>
+</plist>

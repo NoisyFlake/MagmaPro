@@ -14,6 +14,18 @@
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];
 	}
 
+	// Remove PowerModule entry if it's not installed
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![fileManager fileExistsAtPath:@"/Library/ControlCenter/Bundles/PowerModule.bundle"]) {
+		NSMutableArray *mutableArray = [_specifiers mutableCopy];
+		for (PSSpecifier *spec in _specifiers) {
+			if ([spec.properties[@"id"] isEqual:@"PowerModuleSpec"]) {
+				[mutableArray removeObject:spec];
+			}
+		}
+		_specifiers = mutableArray;
+	}
+
 	return _specifiers;
 }
 
@@ -144,7 +156,7 @@
 		version.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 		version.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0f];
 		version.textColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.84 alpha:1.0];
-		version.text = @"Version 1.2.3";
+		version.text = @"Version 1.3";
 		version.backgroundColor = [UIColor clearColor];
 		version.textAlignment = NSTextAlignmentCenter;
 
