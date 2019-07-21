@@ -274,8 +274,11 @@ BOOL powerModuleInstalled;
 		_MTBackdropView *backdropView = MSHookIvar<_MTBackdropView *>(self.overlayBackgroundView, "_backdropView");
 		backdropView.luminanceAlpha = 0;
 	}
+}
 
-
+-(void)dismissAnimated:(BOOL)arg1 withCompletionHandler:(id)arg2 {
+	%orig;
+	self.overlayBackgroundView.backgroundColor = [UIColor clearColor];
 }
 %end
 
