@@ -325,7 +325,17 @@ BOOL powerModuleInstalled;
 	-(void)didMoveToWindow {
 		%orig;
 
-		MTMaterialView *matView = MSHookIvar<MTMaterialView *>(self, "_continuousValueBackgroundView");
+		MTMaterialView *matView = nil;
+
+		for (UIView* view in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
+			if ([view isMemberOfClass:%c(MTMaterialView)]) {
+				matView = (MTMaterialView*)view;
+				break;
+			}
+		}
+
+		if (matView == nil) return;
+
 		_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
 
 		UIViewController *controller = [self _viewControllerForAncestor];
