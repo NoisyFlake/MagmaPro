@@ -134,7 +134,7 @@ BOOL powerModuleInstalled;
 
 %hook CCUIButtonModuleView
 %group AppLaunchers
-	-(void)didMoveToWindow {
+	-(void)layoutSubviews {
 		%orig;
 
 		// App Shortcuts need to be only colored once and have no state
@@ -228,14 +228,22 @@ BOOL powerModuleInstalled;
 
 	// Color BackdropView (which is only visible on active toggles)
 	if ([self respondsToSelector:@selector(allSubviews)] || [self respondsToSelector:@selector(subviews)]) {
-		for (_MTBackdropView* backdropView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
-			if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
+		for (UIView* backdropView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
+			if ([backdropView isMemberOfClass:%c(_MTBackdropView)] || [backdropView isMemberOfClass:%c(MTMaterialView)]) {
+
 				if (getBool(@"removeToggleBackground")) {
-					backdropView.alpha = 0;
+					backdropView.hidden = 1;
 				} else {
 					backdropView.backgroundColor = backgroundColor;
-					backdropView.brightness = bgBrightness;
-					backdropView.colorAddColor = bgColorAddColor;
+
+					if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
+						// iOS 11 - 12
+						((_MTBackdropView*)backdropView).brightness = bgBrightness;
+						((_MTBackdropView*)backdropView).colorAddColor = bgColorAddColor;
+					} else if ([backdropView isMemberOfClass:%c(MTMaterialView)]) {
+						// iOS 13
+						((MTMaterialView*)backdropView).configuration = 1;
+					}
 				}
 			}
 		}
@@ -270,7 +278,11 @@ BOOL powerModuleInstalled;
 	if (selectedColor == nil) return;
 	self.overlayBackgroundView.backgroundColor = [UIColor RGBAColorFromHexString:selectedColor];
 
-	if ([selectedColor containsString:@":1.00"]) {
+	if (![selectedColor isEqual:@"#000000:1.00"]) return;
+
+	if ([self.overlayBackgroundView respondsToSelector:@selector(configuration)]) {
+		self.overlayBackgroundView.configuration = 2;
+	} else {
 		_MTBackdropView *backdropView = MSHookIvar<_MTBackdropView *>(self.overlayBackgroundView, "_backdropView");
 		backdropView.luminanceAlpha = 0;
 	}
@@ -279,6 +291,12 @@ BOOL powerModuleInstalled;
 -(void)dismissAnimated:(BOOL)arg1 withCompletionHandler:(id)arg2 {
 	%orig;
 	self.overlayBackgroundView.backgroundColor = [UIColor clearColor];
+}
+-(id)_beginPresentationAnimated:(BOOL)arg1 interactive:(BOOL)arg2 {
+	if ([self.overlayBackgroundView respondsToSelector:@selector(configuration)] && [getValue(@"mainBackground") isEqual:@"#000000:1.00"]) {
+		self.overlayBackgroundView.configuration = 2;
+	}
+	return %orig;
 }
 %end
 
@@ -327,47 +345,19 @@ BOOL powerModuleInstalled;
 	%hook CCUIModuleSliderView
 	-(void)didMoveToWindow {
 		%orig;
+		colorSlider(self);
+		colorGlyph(self);
+	}
+	%end
 
-		MTMaterialView *matView = nil;
-
-		for (UIView* view in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
-			if ([view isMemberOfClass:%c(MTMaterialView)]) {
-				matView = (MTMaterialView*)view;
-				break;
-			}
-		}
-
-		if (matView == nil) return;
-
-		_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
-
-		UIViewController *controller = [self _viewControllerForAncestor];
-		NSString *sliderColor = nil;
-		NSString *glyphColor = nil;
-
-		if ([[controller description] containsString:@"Display"]) {
-			sliderColor = getValue(@"sliderBrightness");
-			glyphColor = getValue(@"sliderBrightnessGlyph");
-		} else if ([[controller description] containsString:@"Audio"]) {
-			sliderColor = getValue(@"sliderVolume");
-			glyphColor = getValue(@"sliderVolumeGlyph");
-		} else if ([[controller description] containsString:@"CCRinger"]) {
-			sliderColor = getValue(@"sliderCCRinger");
-			glyphColor = getValue(@"sliderCCRingerGlyph");
-		}
-
-		if (sliderColor != nil && ![sliderColor containsString:@":0.00"]) {
-			backdropView.brightness = 0;
-			backdropView.colorAddColor = [UIColor clearColor];
-			backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
-			colorLayers(self.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
-		}
-
-		if (glyphColor != nil) {
-			CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(self, "_compensatingGlyphPackageView");
-			colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
-		}
-
+	%hook CCUIContinuousSliderView
+	-(void)layoutSubviews {
+		%orig;
+		colorSlider(self);
+	}
+	-(void)didMoveToWindow {
+		%orig;
+		colorGlyph(self);
 	}
 	%end
 
@@ -390,6 +380,83 @@ BOOL powerModuleInstalled;
 	}
 	%end
 %end
+
+static void colorSlider(UIView *sliderView) {
+	HBLogWarn(@"Coloring sliders");
+	MTMaterialView *matView = nil;
+
+	for (UIView* view in ([sliderView respondsToSelector:@selector(allSubviews)] ? [sliderView allSubviews] : [sliderView subviews])) {
+		if ([view isMemberOfClass:%c(MTMaterialView)]) {
+			matView = (MTMaterialView*)view;
+			break;
+		}
+	}
+
+	if (matView == nil) return;
+
+	UIViewController *controller = [sliderView _viewControllerForAncestor];
+	NSString *sliderColor = nil;
+
+	if ([[controller description] containsString:@"Display"]) {
+		sliderColor = getValue(@"sliderBrightness");
+	} else if ([[controller description] containsString:@"Audio"]) {
+		sliderColor = getValue(@"sliderVolume");
+	} else if ([[controller description] containsString:@"CCRinger"]) {
+		sliderColor = getValue(@"sliderCCRinger");
+	}
+
+	if (sliderColor != nil && ![sliderColor containsString:@":0.00"]) {
+		if ([matView respondsToSelector:@selector(configuration)]) {
+			// iOS 13
+			matView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
+			matView.configuration = 1;
+		} else {
+			// iOS 12
+			_MTBackdropView* backdropView = MSHookIvar<_MTBackdropView *>(matView, "_backdropView");
+
+			backdropView.brightness = 0;
+			backdropView.colorAddColor = [UIColor clearColor];
+			backdropView.backgroundColor = [UIColor RGBAColorFromHexString:sliderColor];
+			colorLayers(sliderView.layer.sublayers, [[UIColor RGBAColorFromHexString:sliderColor] CGColor]);
+		}
+	}
+}
+
+static void colorGlyph(UIView *sliderView) {
+	HBLogWarn(@"Coloring glyph");
+	MTMaterialView *matView = nil;
+
+	for (UIView* view in ([sliderView respondsToSelector:@selector(allSubviews)] ? [sliderView allSubviews] : [sliderView subviews])) {
+		if ([view isMemberOfClass:%c(MTMaterialView)]) {
+			matView = (MTMaterialView*)view;
+			break;
+		}
+	}
+
+	if (matView == nil) return;
+
+	UIViewController *controller = [sliderView _viewControllerForAncestor];
+	NSString *glyphColor = nil;
+
+	if ([[controller description] containsString:@"Display"]) {
+		glyphColor = getValue(@"sliderBrightnessGlyph");
+	} else if ([[controller description] containsString:@"Audio"]) {
+		glyphColor = getValue(@"sliderVolumeGlyph");
+	} else if ([[controller description] containsString:@"CCRinger"]) {
+		glyphColor = getValue(@"sliderCCRingerGlyph");
+	}
+
+	if (glyphColor != nil) {
+		if ([matView respondsToSelector:@selector(configuration)]) {
+			// iOS 13
+			colorLayers(sliderView.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+		} else {
+			// iOS 11-12
+			CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(sliderView, "_compensatingGlyphPackageView");
+			colorLayers(glyph.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+		}
+	}
+}
 
 // Don't color transparent areas
 static BOOL isNotAColor(CGColorRef cgColor) {

@@ -1,3 +1,10 @@
+@interface CCUIContinuousSliderView : UIView
+@end
+
+@interface UIView (MagmaPro)
+-(id)_viewControllerForAncestor;
+@end
+
 @interface CCUICAPackageView : UIView
 -(id)_viewControllerForAncestor;
 @end
@@ -57,6 +64,7 @@
 @end
 
 @interface MTMaterialView : UIView
+@property(nonatomic) long long configuration;
 @end
 
 @interface _MTBackdropView : UIView
@@ -89,8 +97,12 @@
 @interface CCUIModularControlCenterOverlayViewController
 @property (nonatomic,readonly) MTMaterialView * overlayBackgroundView;
 @end
+
+
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
+static void colorSlider(UIView *sliderView);
+static void colorGlyph(UIView *sliderView);
 static void colorLabel(UILabel *label, UIColor *color);
 static void colorLayers(NSArray *layers, CGColorRef color);
 static void colorLayersForConnectivity(NSArray *layers, CGColorRef color);

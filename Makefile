@@ -1,3 +1,4 @@
+TARGET = iphone:11.2:11.0
 ARCHS = arm64 arm64e
 FINALPACKAGE = 0
 
@@ -15,4 +16,4 @@ SUBPROJECTS += preferences
 include $(THEOS_MAKE_PATH)/aggregate.mk
 
 after-install::
-	install.exec "killall -9 SpringBoard"
+	install.exec "sbreload"
