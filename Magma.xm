@@ -229,21 +229,23 @@ BOOL powerModuleInstalled;
 	// Color BackdropView (which is only visible on active toggles)
 	if ([self respondsToSelector:@selector(allSubviews)] || [self respondsToSelector:@selector(subviews)]) {
 		for (UIView* backdropView in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
-			if ([backdropView isMemberOfClass:%c(_MTBackdropView)] || [backdropView isMemberOfClass:%c(MTMaterialView)]) {
 
+			if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
+				// iOS 11 - 12
 				if (getBool(@"removeToggleBackground")) {
 					backdropView.hidden = 1;
 				} else {
 					backdropView.backgroundColor = backgroundColor;
-
-					if ([backdropView isMemberOfClass:%c(_MTBackdropView)]) {
-						// iOS 11 - 12
-						((_MTBackdropView*)backdropView).brightness = bgBrightness;
-						((_MTBackdropView*)backdropView).colorAddColor = bgColorAddColor;
-					} else if ([backdropView isMemberOfClass:%c(MTMaterialView)]) {
-						// iOS 13
-						((MTMaterialView*)backdropView).configuration = 1;
-					}
+					((_MTBackdropView*)backdropView).brightness = bgBrightness;
+					((_MTBackdropView*)backdropView).colorAddColor = bgColorAddColor;
+				}
+			} else if ([backdropView isMemberOfClass:%c(MTMaterialView)] && [backdropView respondsToSelector:@selector(configuration)]) {
+				// iOS 13
+				if (getBool(@"removeToggleBackground")) {
+					backdropView.hidden = 1;
+				} else {
+					backdropView.backgroundColor = backgroundColor;
+					((MTMaterialView*)backdropView).configuration = 1;
 				}
 			}
 		}
