@@ -26,6 +26,14 @@
 -(id)_viewControllerForAncestor;
 @end
 
+@interface CCUIContentModuleContainerViewController : UIViewController
+@property (nonatomic,copy) NSString * moduleIdentifier;
+@end
+
+@interface CCUIContentModuleContentContainerView : UIView
+-(id)_viewControllerForAncestor;
+@end
+
 @interface CCUIContentModuleContainerView : UIView
 @property (nonatomic,copy,readonly) NSString * moduleIdentifier;
 @end
@@ -101,6 +109,7 @@
 
 static BOOL getBool(NSString *key);
 static NSString* getValue(NSString *key);
+static void colorHomeButton(UIView *homeView);
 static void colorSlider(UIView *sliderView);
 static void colorGlyph(UIView *sliderView);
 static void colorLabel(UILabel *label, UIColor *color);

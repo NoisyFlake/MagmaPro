@@ -259,15 +259,17 @@ BOOL powerModuleInstalled;
 -(void)layoutSubviews {
 	%orig;
 	if ([self.moduleIdentifier isEqual:@"com.apple.Home.ControlCenter"]) {
-		NSString *selectedColor = getValue(@"AppleHomeModule_inactive");
-		if (selectedColor == nil) return;
+		colorHomeButton(self);
+	}
+}
+%end
 
-		for (UIView* homeButton in ([self respondsToSelector:@selector(allSubviews)] ? [self allSubviews] : [self subviews])) {
-			if ([homeButton isMemberOfClass:%c(HUCCHomeButton)]) {
-				colorLayers(homeButton.layer.sublayers, [[UIColor RGBAColorFromHexString:selectedColor] CGColor]);
-			}
-		}
-
+%hook CCUIContentModuleContentContainerView
+-(void)layoutSubviews {
+	%orig;
+	CCUIContentModuleContainerViewController *controller = [self _viewControllerForAncestor];
+	if ([controller.moduleIdentifier isEqual:@"com.apple.Home.ControlCenter"]) {
+		colorHomeButton(self);
 	}
 }
 %end
@@ -383,8 +385,18 @@ BOOL powerModuleInstalled;
 	%end
 %end
 
+static void colorHomeButton(UIView *homeView) {
+	NSString *selectedColor = getValue(@"AppleHomeModule_inactive");
+	if (selectedColor == nil) return;
+
+	for (UIView* homeButton in ([homeView respondsToSelector:@selector(allSubviews)] ? [homeView allSubviews] : [homeView subviews])) {
+		if ([homeButton isMemberOfClass:%c(HUCCHomeButton)]) {
+			colorLayers(homeButton.layer.sublayers, [[UIColor RGBAColorFromHexString:selectedColor] CGColor]);
+		}
+	}
+}
+
 static void colorSlider(UIView *sliderView) {
-	HBLogWarn(@"Coloring sliders");
 	MTMaterialView *matView = nil;
 
 	for (UIView* view in ([sliderView respondsToSelector:@selector(allSubviews)] ? [sliderView allSubviews] : [sliderView subviews])) {
@@ -425,7 +437,6 @@ static void colorSlider(UIView *sliderView) {
 }
 
 static void colorGlyph(UIView *sliderView) {
-	HBLogWarn(@"Coloring glyph");
 	MTMaterialView *matView = nil;
 
 	for (UIView* view in ([sliderView respondsToSelector:@selector(allSubviews)] ? [sliderView allSubviews] : [sliderView subviews])) {
