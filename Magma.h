@@ -22,6 +22,7 @@
 
 @interface CCUIButtonModuleView : UIControl
 @property (nonatomic,copy) NSString * glyphState;
+-(void)magmaColorAppLauncher;
 -(void)colorButton;
 -(id)_viewControllerForAncestor;
 @end

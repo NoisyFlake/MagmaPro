@@ -136,7 +136,16 @@ BOOL powerModuleInstalled;
 %group AppLaunchers
 	-(void)layoutSubviews {
 		%orig;
+		[self magmaColorAppLauncher];
+	}
 
+	-(void)_updateGlyphImageViewVisualStyling {
+		%orig;
+		[self magmaColorAppLauncher];
+	}
+
+	%new
+	-(void)magmaColorAppLauncher {
 		// App Shortcuts need to be only colored once and have no state
 		UIViewController *controller = [self _viewControllerForAncestor];
 		if ([controller isMemberOfClass:%c(CCUIAppLauncherViewController)]) {
@@ -198,6 +207,7 @@ BOOL powerModuleInstalled;
 
 	if (isEnabled && ![getValue(@"enabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"enabledTogglesGlobal");
 	if (!isEnabled && ![getValue(@"disabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"disabledTogglesGlobal");
+
 
 	if (selectedColor == nil) return;
 
