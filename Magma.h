@@ -1,6 +1,9 @@
 @interface CCUIContinuousSliderView : UIView
 @end
 
+@interface MediaControlsVolumeSliderView : CCUIContinuousSliderView
+@end
+
 @interface UIView (MagmaPro)
 -(id)_viewControllerForAncestor;
 @end
@@ -37,6 +40,7 @@
 
 @interface CCUIContentModuleContainerView : UIView
 @property (nonatomic,copy,readonly) NSString * moduleIdentifier;
+-(void)magmaColorHomeModule;
 @end
 
 @interface CCUIToggleModule : NSObject

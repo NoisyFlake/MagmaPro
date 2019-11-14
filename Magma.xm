@@ -368,6 +368,10 @@ BOOL powerModuleInstalled;
 	-(void)layoutSubviews {
 		%orig;
 		colorSlider(self);
+
+		// Seriously, fuck the volume slider in iOS 13
+		UIViewController *controller = [self _viewControllerForAncestor];
+		if ([[controller description] containsString:@"Volume"]) colorGlyph(self);
 	}
 	-(void)didMoveToWindow {
 		%orig;
@@ -382,6 +386,7 @@ BOOL powerModuleInstalled;
 			id controller = [(CCUICAPackageView *)self.delegate _viewControllerForAncestor];
 			if ([controller isMemberOfClass:%c(CCUIDisplayModuleViewController)] ||
 				[controller isMemberOfClass:%c(CCUIAudioModuleViewController)] ||
+				[controller isMemberOfClass:%c(MediaControlsVolumeViewController)] ||
 				[controller isMemberOfClass:%c(CCRingerModuleContentViewController)]) {
 				%orig(1);
 			} else {
@@ -409,21 +414,24 @@ static void colorHomeButton(UIView *homeView) {
 static void colorSlider(UIView *sliderView) {
 	MTMaterialView *matView = nil;
 
+	UIViewController *controller = [sliderView _viewControllerForAncestor];
+
 	for (UIView* view in ([sliderView respondsToSelector:@selector(allSubviews)] ? [sliderView allSubviews] : [sliderView subviews])) {
 		if ([view isMemberOfClass:%c(MTMaterialView)]) {
 			matView = (MTMaterialView*)view;
-			break;
+
+			// iOS 13s volume slider is different and we need the LAST matView for it
+			if (![[controller description] containsString:@"Volume"]) break;
 		}
 	}
 
 	if (matView == nil) return;
 
-	UIViewController *controller = [sliderView _viewControllerForAncestor];
 	NSString *sliderColor = nil;
 
 	if ([[controller description] containsString:@"Display"]) {
 		sliderColor = getValue(@"sliderBrightness");
-	} else if ([[controller description] containsString:@"Audio"]) {
+	} else if ([[controller description] containsString:@"Audio"] || [[controller description] containsString:@"Volume"]) {
 		sliderColor = getValue(@"sliderVolume");
 	} else if ([[controller description] containsString:@"CCRinger"]) {
 		sliderColor = getValue(@"sliderCCRinger");
@@ -463,7 +471,7 @@ static void colorGlyph(UIView *sliderView) {
 
 	if ([[controller description] containsString:@"Display"]) {
 		glyphColor = getValue(@"sliderBrightnessGlyph");
-	} else if ([[controller description] containsString:@"Audio"]) {
+	} else if ([[controller description] containsString:@"Audio"] || [[controller description] containsString:@"Volume"]) {
 		glyphColor = getValue(@"sliderVolumeGlyph");
 	} else if ([[controller description] containsString:@"CCRinger"]) {
 		glyphColor = getValue(@"sliderCCRingerGlyph");
@@ -472,7 +480,19 @@ static void colorGlyph(UIView *sliderView) {
 	if (glyphColor != nil) {
 		if ([matView respondsToSelector:@selector(configuration)]) {
 			// iOS 13
-			colorLayers(sliderView.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+			if (![[controller description] containsString:@"Volume"]) {
+				colorLayers(sliderView.layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+			} else {
+				UIView *parent = nil;
+				for (UIView* view in [sliderView allSubviews]) {
+					if ([view isKindOfClass:%c(MediaControlsVolumeSliderView)]) {
+						parent = (MediaControlsVolumeSliderView*)view;
+						break;
+					}
+				}
+
+				colorLayers(((UIView *)[[parent allSubviews] lastObject]).layer.sublayers, [[UIColor RGBAColorFromHexString:glyphColor] CGColor]);
+			}
 		} else {
 			// iOS 11-12
 			CCUICAPackageView *glyph = MSHookIvar<CCUICAPackageView *>(sliderView, "_compensatingGlyphPackageView");
