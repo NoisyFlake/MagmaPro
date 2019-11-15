@@ -163,7 +163,7 @@ BOOL powerModuleInstalled;
 	}
 %end
 
--(void)didMoveToWindow {
+-(void)layoutSubviews {
 	%orig;
 	[self colorButton];
 }
@@ -208,7 +208,6 @@ BOOL powerModuleInstalled;
 	if (isEnabled && ![getValue(@"enabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"enabledTogglesGlobal");
 	if (!isEnabled && ![getValue(@"disabledTogglesGlobal") containsString:@":0.00"]) selectedColor = getValue(@"disabledTogglesGlobal");
 
-
 	if (selectedColor == nil) return;
 
 	UIColor *glyphColor = [UIColor RGBAColorFromHexString:selectedColor];
@@ -223,6 +222,7 @@ BOOL powerModuleInstalled;
 		bgColorAddColor = [UIColor clearColor];
 	}
 
+
 	colorLayers(self.layer.sublayers, [glyphColor CGColor]);
 
 	// Color labels (e.g. for AirPlay)
@@ -233,6 +233,7 @@ BOOL powerModuleInstalled;
 			}
 		}
 	}
+
 
 	if (!isEnabled) return;
 
@@ -253,7 +254,7 @@ BOOL powerModuleInstalled;
 				// iOS 13
 				if (getBool(@"removeToggleBackground")) {
 					backdropView.hidden = 1;
-				} else {
+				} else if (getBool(@"invertToggles")){
 					backdropView.backgroundColor = backgroundColor;
 					((MTMaterialView*)backdropView).configuration = 1;
 				}
@@ -511,6 +512,9 @@ static void colorGlyph(UIView *sliderView) {
 static BOOL isNotAColor(CGColorRef cgColor) {
 	if (cgColor == nil) return YES;
 
+	// Monochrome colors are never transparent, so they count as a color we want to overwrite
+	if (CGColorGetNumberOfComponents(cgColor) < 4) return NO;
+
 	const CGFloat *components = CGColorGetComponents(cgColor);
 	return components[3] == 0;
 }
@@ -526,6 +530,7 @@ static void colorLayers(NSArray *layers, CGColorRef color) {
 	for (CALayer *sublayer in layers) {
 		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
 			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
+
 			if (!isNotAColor(fillColor)) {
 				((CAShapeLayer *)sublayer).fillColor = color;
 			}
@@ -550,7 +555,7 @@ static void colorLayers(NSArray *layers, CGColorRef color) {
 
 static void colorLayersForConnectivity(NSArray *layers, CGColorRef color) {
 	for (CALayer *sublayer in layers) {
-		if ([sublayer isMemberOfClass:%c(CAShapeLayer)]) {
+		if ([sublayer isKindOfClass:%c(CAShapeLayer)]) {
 			CGColorRef fillColor = ((CAShapeLayer *)sublayer).fillColor;
 			if (!isNotAColor(fillColor)) {
 				((CAShapeLayer *)sublayer).fillColor = color;
