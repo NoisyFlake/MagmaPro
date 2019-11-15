@@ -1,6 +1,8 @@
-TARGET = iphone:11.2:11.0
-ARCHS = arm64 arm64e
-FINALPACKAGE = 0
+TARGET = iphone:clang:11.2:11.0
+ARCHS = arm64
+ifeq ($(shell uname -s),Darwin)
+	ARCHS += arm64e
+endif
 
 include $(THEOS)/makefiles/common.mk
 

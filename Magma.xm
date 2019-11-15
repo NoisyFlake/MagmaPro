@@ -319,6 +319,9 @@ BOOL powerModuleInstalled;
 	-(void)layoutSubviews {
 		%orig;
 
+		// Don't color controls on the lockscreen
+		if (self.style == 3) return;
+
 		if (getValue(@"mediaControlsLeftButton") != nil) {
 			MediaControlsTransportButton *leftButton = self.leftButton;
 			leftButton.layer.sublayers[0].contentsMultiplyColor = [[UIColor RGBAColorFromHexString:getValue(@"mediaControlsLeftButton")] CGColor];
@@ -340,6 +343,9 @@ BOOL powerModuleInstalled;
 	%hook MediaControlsHeaderView
 	-(void)_updateStyle {
 		%orig;
+
+		// Don't color controls on the lockscreen
+		if (self.style == 3) return;
 
 		if (getValue(@"mediaControlsPrimaryLabel") != nil) {
 			UILabel *primaryLabel = self.primaryLabel;

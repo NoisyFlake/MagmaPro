@@ -96,6 +96,7 @@
 @property (nonatomic,retain) MediaControlsTransportButton * leftButton;
 @property (nonatomic,retain) MediaControlsTransportButton * middleButton;
 @property (nonatomic,retain) MediaControlsTransportButton * rightButton;
+@property (assign,nonatomic) long long style;
 @end
 
 @interface MediaControlsContainerView : UIView
@@ -105,6 +106,7 @@
 @interface MediaControlsHeaderView : UIView
 @property (nonatomic,retain) UILabel * primaryLabel;
 @property (nonatomic,retain) UILabel * secondaryLabel;
+@property (assign,nonatomic) long long style;
 @end
 
 @interface CCUIModularControlCenterOverlayViewController
