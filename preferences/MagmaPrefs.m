@@ -1,4 +1,5 @@
 #include "MagmaPrefs.h"
+#include "NSTask.h"
 #import <spawn.h>
 
 @implementation MagmaPrefs
@@ -139,6 +140,7 @@
 		[background layoutIfNeeded];
 		background.backgroundColor = [UIColor colorWithRed:0.11 green:0.11 blue:0.12 alpha:1.0];
 		background.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+		[self addSubview:background];
 
 		CGRect tweakNameFrame = CGRectMake(0, -40, width, height);
 		tweakName = [[UILabel alloc] initWithFrame:tweakNameFrame];
@@ -149,20 +151,54 @@
 		tweakName.textColor = [UIColor colorWithRed:1.00 green:0.23 blue:0.19 alpha:1.0];
 		tweakName.text = @"Magma Pro";
 		tweakName.textAlignment = NSTextAlignmentCenter;
+		[self addSubview:tweakName];
 
 		CGRect versionFrame = CGRectMake(0, -5, width, height);
-		version = [[UILabel alloc] initWithFrame:versionFrame];
-		version.numberOfLines = 1;
-		version.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-		version.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0f];
-		version.textColor = [UIColor colorWithRed:0.82 green:0.82 blue:0.84 alpha:1.0];
-		version.text = @"Version 1.3.2";
-		version.backgroundColor = [UIColor clearColor];
-		version.textAlignment = NSTextAlignmentCenter;
+        version = [[UILabel alloc] initWithFrame:versionFrame];
+        version.numberOfLines = 1;
+        version.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        version.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:15.0f];
+        version.textColor = [UIColor colorWithRed:1.00 green:1.00 blue:1.00 alpha:0.5];
+        version.backgroundColor = [UIColor clearColor];
+        version.textAlignment = NSTextAlignmentCenter;
+        version.alpha = 0;
+        [self addSubview:version];
 
-		[self addSubview:background];
-		[self addSubview:tweakName];
-		[self addSubview:version];
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSString *versionString = @"Version unknown";
+            NSPipe *pipe = [NSPipe pipe];
+
+            NSTask *task = [[NSTask alloc] init];
+            task.arguments = @[@"list", @"com.noisyflake.magmapro"];
+            task.launchPath = @"/usr/bin/apt";
+            [task setStandardOutput: pipe];
+            [task launch];
+            [task waitUntilExit];
+
+            NSFileHandle *file = [pipe fileHandleForReading];
+            NSData *output = [file readDataToEndOfFile];
+            NSString *outputString = [[NSString alloc] initWithData:output encoding:NSUTF8StringEncoding];
+            [file closeFile];
+
+            if ([outputString containsString:@"com.noisyflake"]) {
+                NSArray *splitFirst = [outputString componentsSeparatedByString:@"/now "];
+                if ([splitFirst count] > 1) {
+                    NSString *line = [splitFirst objectAtIndex:1];
+                    NSArray *splitSecond = [line componentsSeparatedByString:@" iphoneos"];
+                    if ([splitSecond count] > 1) {
+                        versionString = [NSString stringWithFormat:@"Version %@", [splitSecond objectAtIndex:0]];
+                    }
+                }
+            }
+
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                    // Update label on the main queue
+                    version.text = versionString;
+                    [UIView animateWithDuration:0.75 delay:0 options:UIViewAnimationOptionCurveEaseIn animations:^{
+                        version.alpha = 1;
+                    } completion:nil];
+                });
+        });
 	}
     return self;
 }
